@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.View;
 
 import io.github.heartinfei.slogger.Configuration;
-import io.github.heartinfei.slogger.DebugPlan;
+import io.github.heartinfei.slogger.plan.DebugPlan;
 import io.github.heartinfei.slogger.S;
 
 /**
@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         test();
+        S.e(new RuntimeException("Fuck"));
         new Thread() {
             @Override
             public void run() {

@@ -1,4 +1,4 @@
-package io.github.heartinfei.slogger;
+package io.github.heartinfei.slogger.plan;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +8,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import io.github.heartinfei.slogger.Configuration;
 
 /**
  * 简介：
@@ -21,30 +23,43 @@ public abstract class BasePlan {
     private static final int CHUNK_SIZE = 4000;
 
     /**
-     * 输出Log
+     * 输出Log信息
      *
-     * @param tag 配置信息
+     * @param c   配置信息
      * @param msg log内容
      */
-    protected abstract void logOut(@NonNull String tag, @Nullable List<String> msg);
+    protected void logInfo(@NonNull Configuration c, @Nullable List<String> msg) {
+    }
+
+    /**
+     * 输出错误信息
+     *
+     * @param c
+     * @param msg
+     */
+    protected void logErro(@NonNull Configuration c, @Nullable List<String> msg) {
+    }
 
     protected void i(Configuration conf, String... msgs) {
+        String header = generateLogHeader(conf);
         for (String msg : msgs) {
-            logOut(conf.getTag(), buildMessage(msg, conf));
+            logInfo(conf, buildMessage(header, msg, conf));
         }
     }
 
     protected void e(Configuration conf, Throwable... msgs) {
-        for (Throwable msg : msgs) {
-
+        for (Throwable t : msgs) {
+            logErro(conf, buildMessage(null, getThrowableInfo(t), conf));
         }
     }
 
-    private List<String> buildMessage(@Nullable String msg, @NonNull Configuration config) {
+    private List<String> buildMessage(String header, @Nullable String msg, @NonNull Configuration config) {
         if (msg == null) {
             msg = "";
         }
-        String header = generateLogHeader(config);
+        if (header == null) {
+            header = "";
+        }
         List<String> result = new LinkedList<>();
         //要打印的log 日志的总长度
         int len = header.length() + msg.length();

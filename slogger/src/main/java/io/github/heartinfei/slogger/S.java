@@ -1,12 +1,13 @@
 package io.github.heartinfei.slogger;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import io.github.heartinfei.slogger.plan.BasePlan;
 
 /**
  * 简介：日志打印工具类
@@ -59,11 +60,6 @@ public class S {
             for (BasePlan plan : plans) {
                 plan.e(conf, msgs);
             }
-        }
-
-        @Override
-        protected void logOut(@NonNull String tag, @Nullable List<String> msg) {
-
         }
     };
 
