@@ -49,6 +49,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 简介：
+ *
  * @author 王强（249346528@qq.com） 2017/9/4
  */
 public final class DiskLruCache implements Closeable {
@@ -72,8 +73,7 @@ public final class DiskLruCache implements Closeable {
     private final int valueCount;
     private long size = 0;
     private Writer journalWriter;
-    private final LinkedHashMap<String, Entry> lruEntries
-            = new LinkedHashMap<String, Entry>(0, 0.75f, true);
+    private final LinkedHashMap<String, Entry> lruEntries = new LinkedHashMap<>(0, 0.75f, true);
     private int redundantOpCount;
 
     private long nextSequenceNumber = 0;
@@ -117,7 +117,7 @@ public final class DiskLruCache implements Closeable {
      * "\n".
      *
      * @throws EOFException if the stream is exhausted before the next newline
-     *     character.
+     *                      character.
      */
     public static String readAsciiLine(InputStream in) throws IOException {
         // TODO: support UTF-8 here instead
@@ -173,7 +173,9 @@ public final class DiskLruCache implements Closeable {
         }
     }
 
-    /** This cache uses a single background thread to evict entries. */
+    /**
+     * This cache uses a single background thread to evict entries.
+     */
     private final ExecutorService superCacheExecutorService = new ThreadPoolExecutor(0, 1,
             60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
     private final Callable<Void> cleanupCallable = new Callable<Void>() {
@@ -206,10 +208,10 @@ public final class DiskLruCache implements Closeable {
      * Opens the cache in {@code directory}, creating a cache if none exists
      * there.
      *
-     * @param directory a writable directory
+     * @param directory  a writable directory
      * @param appVersion
      * @param valueCount the number of values per cache entry. Must be positive.
-     * @param maxSize the maximum number of bytes this cache should use to store
+     * @param maxSize    the maximum number of bytes this cache should use to store
      * @throws IOException if reading or writing the cache directory fails
      */
     public static DiskLruCache open(File directory, int appVersion, int valueCount, long maxSize)
@@ -716,7 +718,7 @@ public final class DiskLruCache implements Closeable {
                 if (entry.currentEditor != this) {
                     throw new IllegalStateException();
                 }
-                return new FaultHidingOutputStream(new FileOutputStream(entry.getDirtyFile(index)));
+                return new FaultHidingOutputStream(new FileOutputStream(entry.getDirtyFile(index), true));
             }
         }
 
@@ -800,16 +802,24 @@ public final class DiskLruCache implements Closeable {
     private final class Entry {
         private final String key;
 
-        /** Lengths of this entry's files. */
+        /**
+         * Lengths of this entry's files.
+         */
         private final long[] lengths;
 
-        /** True if this entry has ever been published */
+        /**
+         * True if this entry has ever been published
+         */
         private boolean readable;
 
-        /** The ongoing edit or null if this entry is not being edited. */
+        /**
+         * The ongoing edit or null if this entry is not being edited.
+         */
         private Editor currentEditor;
 
-        /** The sequence number of the most recently committed edit to this entry. */
+        /**
+         * The sequence number of the most recently committed edit to this entry.
+         */
         private long sequenceNumber;
 
         private Entry(String key) {

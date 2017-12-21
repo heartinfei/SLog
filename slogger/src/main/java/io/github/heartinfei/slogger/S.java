@@ -1,13 +1,16 @@
 package io.github.heartinfei.slogger;
 
+import android.app.Activity;
+import android.app.Application;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import io.github.heartinfei.slogger.plan.BasePlan;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 简介：日志打印工具类
@@ -42,8 +45,8 @@ public class S {
      * key 类名
      * value Configuration
      */
-    private final static Map<String, ThreadLocal<Configuration>> USER_CONF = new HashMap<>();
-    private final static List<BasePlan> PLANS = new LinkedList<>();
+    private final static Map<String, Configuration> USER_CONF = new ConcurrentHashMap<>();
+    private final static List<BasePlan> PLANS = Collections.synchronizedList(new LinkedList<BasePlan>());
     private static BasePlan[] plansArray = new BasePlan[0];
     private static final BasePlan DELEGATE = new BasePlan() {
         @Override
@@ -63,34 +66,54 @@ public class S {
         }
     };
 
+    private final static TagWatcher WATCHER = new TagWatcher() {
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            flush();
+            USER_CONF.remove(activity.getClass().getSimpleName());
+        }
+    };
+
+    public static void flush() {
+        BasePlan[] plans = plansArray;
+        for (BasePlan plan : plans) {
+            plan.flush();
+        }
+    }
+
     private S() {
         throw new AssertionError("No instances.");
     }
 
-    public static void init(Class<?> cls) {
-        GLOADBAL_CONF = new Configuration.Builder(cls)
-                .build();
+
+    public static void init(Application app) {
+        init(app, null);
     }
 
-    public static void init(@NonNull Configuration configuration) {
-        GLOADBAL_CONF = configuration;
-    }
-
-    public static void addConfig(Configuration c) {
-        synchronized (USER_CONF) {
-            ThreadLocal<Configuration> configWrap = new ThreadLocal<>();
-            configWrap.set(c);
-            USER_CONF.put(getCurrentKey(), configWrap);
+    public static void init(@NonNull Application app, Configuration configuration) {
+        if (app == null) {
+            throw new RuntimeException("Application must be not null!");
         }
+        if (configuration == null) {
+            GLOADBAL_CONF = new Configuration.Builder(app.getClass())
+                    .build();
+        } else {
+            GLOADBAL_CONF = configuration;
+        }
+
+        app.registerActivityLifecycleCallbacks(WATCHER);
+    }
+
+    @UiThread
+    public static void addConfig(Configuration c) {
+        USER_CONF.put(getCurrentKey(), c);
     }
 
     public static void removeConfig(Class<?> cls) {
-        synchronized (USER_CONF) {
-            USER_CONF.remove(cls.getName());
-        }
+        USER_CONF.remove(cls.getName());
     }
 
-    public synchronized static void addPlant(BasePlan... plans) {
+    public static void addPlant(BasePlan... plans) {
         if (plans == null) {
             throw new NullPointerException("trees == null");
         }
@@ -103,7 +126,7 @@ public class S {
         plansArray = PLANS.toArray(new BasePlan[PLANS.size()]);
     }
 
-    public synchronized static void removePlan(BasePlan plan) {
+    public static void removePlan(BasePlan plan) {
         PLANS.remove(plan);
         plansArray = PLANS.toArray(new BasePlan[PLANS.size()]);
     }
@@ -116,12 +139,7 @@ public class S {
     }
 
     private static Configuration getConfigration(String key) {
-        Configuration c = null;
-        ThreadLocal<Configuration> configWrap = USER_CONF.get(key);
-        if (configWrap != null) {
-            c = configWrap.get();
-        }
-        return c;
+        return USER_CONF.get(key);
     }
 
     private static Configuration getCurrentConfigration() {
@@ -131,4 +149,5 @@ public class S {
         }
         return c;
     }
+
 }

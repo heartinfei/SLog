@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import io.github.heartinfei.slogger.BasePlan;
 import io.github.heartinfei.slogger.Configuration;
 
 /**

@@ -1,5 +1,6 @@
 package io.github.heartinfei.superlog;
 
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.View;
 import io.github.heartinfei.slogger.Configuration;
 import io.github.heartinfei.slogger.plan.DebugPlan;
 import io.github.heartinfei.slogger.S;
+import io.github.heartinfei.slogger.plan.ReleasePlan;
 
 /**
  * 简介：
@@ -21,23 +23,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         S.addPlant(new DebugPlan());
-        S.init(new Configuration.Builder(this.getClass()).isPrintTrackInfo(true).build());
+        String path = Environment.getExternalStorageDirectory().getPath()+"/SuperLog/";
+        S.addPlant(new ReleasePlan(path));
+        Configuration c = new Configuration.Builder(this.getClass())
+                .isPrintTrackInfo(true)
+                .trackInfoDeep(10)
+                .tag("Fucking")
+                .build();
+        S.init(getApplication(), c);
+        S.i(getClass().getName());
+        S.i(getClass().getSimpleName());
     }
+
+    int i = 0;
 
     @Override
     public void onClick(View v) {
-        test();
-        S.e(new RuntimeException("Fuck"));
-        new Thread() {
-            @Override
-            public void run() {
-                S.addConfig(new Configuration.Builder(getClass(), "Hello")
-                        .isShowThreadInfo(false)
-                        .isPrintLineNo(false)
-                        .build());
-                S.i("sssssss");
-            }
-        }.start();
+//        test();
+//        S.e(new RuntimeException("Fuck"));
+        S.i("测试" + i++);
+        S.flush();
     }
 
     private void test() {

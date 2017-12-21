@@ -1,4 +1,4 @@
-package io.github.heartinfei.slogger.plan;
+package io.github.heartinfei.slogger;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,8 +8,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import io.github.heartinfei.slogger.Configuration;
 
 /**
  * 简介：
@@ -43,17 +41,17 @@ public abstract class BasePlan {
     protected void i(Configuration conf, String... msgs) {
         String header = generateLogHeader(conf);
         for (String msg : msgs) {
-            logInfo(conf, buildMessage(header, msg, conf));
+            logInfo(conf, buildMessage(header, msg));
         }
     }
 
     protected void e(Configuration conf, Throwable... msgs) {
         for (Throwable t : msgs) {
-            logErro(conf, buildMessage(null, getThrowableInfo(t), conf));
+            logErro(conf, buildMessage(null, getThrowableInfo(t)));
         }
     }
 
-    private List<String> buildMessage(String header, @Nullable String msg, @NonNull Configuration config) {
+    private List<String> buildMessage(String header, @Nullable String msg) {
         if (msg == null) {
             msg = "";
         }
@@ -160,5 +158,9 @@ public abstract class BasePlan {
         t.printStackTrace(pw);
         pw.flush();
         return sw.toString();
+    }
+
+    public boolean flush(){
+        return true;
     }
 }
