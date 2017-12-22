@@ -57,7 +57,7 @@ S.log("MyTag","Message .....");
 ```java
 Configuration config = new Configuration.Builder(this)
                 .trackInfoDeep(Integer.MAX_VALUE)
-                .tag("S_LOG") //default is "SApplication"
+                .tag("S_LOG") //default is your application name
                 .isPrintLineNo(true)    //defaut true
                 .isPrintTag(true)       //defaut true
                 .isPrintTrackInfo(true) //defaut true
