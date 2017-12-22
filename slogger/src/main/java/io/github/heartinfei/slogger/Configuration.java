@@ -128,12 +128,13 @@ public class Configuration {
 
         public Builder(@NonNull Context ctx) {
             this.targetContextName = ctx.getClass().getName();
-            this.tag = ctx.getClass().getSimpleName();
             this.pkgName = ctx.getPackageName();
+            this.tag = ctx.getClass().getSimpleName();
         }
 
-        public Builder(Class<?> cls, String tag) {
-            this.pkgName = cls.getPackage().getName();
+        public Builder(@NonNull Context ctx, String tag) {
+            this.targetContextName = ctx.getClass().getName();
+            this.pkgName = ctx.getPackageName();
             this.tag = tag;
         }
 

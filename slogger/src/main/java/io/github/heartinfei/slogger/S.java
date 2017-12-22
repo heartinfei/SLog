@@ -26,10 +26,10 @@ public class S {
      * @param msg 消息
      */
     public static void i(Object... msg) {
-        tag(null, msg);
+        log(null, msg);
     }
 
-    public static void tag(String tag, Object... msg) {
+    public static void log(String tag, Object... msg) {
         DELEGATE.i(getCurrentConfigration(), tag, msg);
     }
 
@@ -39,10 +39,10 @@ public class S {
      * @param msg
      */
     public static void e(Throwable... msg) {
-        tag(null, msg);
+        log(null, msg);
     }
 
-    public static void tag(String tag, Throwable... msg) {
+    public static void log(String tag, Throwable... msg) {
         DELEGATE.e(getCurrentConfigration(), tag, msg);
     }
 

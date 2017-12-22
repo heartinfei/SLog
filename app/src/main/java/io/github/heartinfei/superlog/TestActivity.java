@@ -6,7 +6,10 @@ import android.view.View;
 
 import io.github.heartinfei.slogger.Configuration;
 import io.github.heartinfei.slogger.S;
-
+/**
+ * Demo
+ * @author 王强 on 2017/12/22 249346528@qq.com
+ */
 public class TestActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
@@ -16,18 +19,29 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         Configuration c = new Configuration.Builder(this)
                 .isPrintTrackInfo(true)
                 .trackInfoDeep(10)
-                .tag("Fucking")
+                .tag("Sugar")
                 .build();
         S.addConfig(c);
-
     }
 
     @Override
     public void onClick(View v) {
-        hehh();
+        switch (v.getId()) {
+            case R.id.btn_print:
+                //使用当前Activity默认Tag
+                nest();
+                break;
+            case R.id.btn_thread:
+                new Thread(() -> S.i("Print message in background thread.")).start();
+                break;
+            case R.id.btn_tag:
+                //使用自定义Tag
+                S.log("My_Tag", "Customer test");
+                break;
+        }
     }
 
-    private void hehh() {
+    private void nest() {
         method();
     }
 

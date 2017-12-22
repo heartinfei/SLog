@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.github.heartinfei.superlog.TestActivity">
+    android:orientation="vertical"
+    tools:context="io.github.heartinfei.superlog.MainActivity">
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
+        android:id="@+id/btn_print"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:onClick="onClick"
-        android:text="Button"
-        tools:layout_editor_absoluteX="222dp"
-        tools:layout_editor_absoluteY="101dp" />
-</android.support.constraint.ConstraintLayout>
+        android:text="@string/print_normal" />
+
+    <Button
+        android:id="@+id/btn_thread"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:onClick="onClick"
+        android:text="@string/print_in_thread" />
+
+    <Button
+        android:id="@+id/btn_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:onClick="onClick"
+        android:text="@string/print_with_temp_tag" />
+
+</LinearLayout>

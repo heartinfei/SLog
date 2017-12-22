@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">SuperLog</string>
+    <string name="print">Print</string>
+    <string name="custom">Custom</string>
+    <string name="print_normal">Print with custom tag</string>
+    <string name="print_in_thread">Print in thread</string>
+    <string name="print_with_temp_tag">Print with tag</string>
 </resources>

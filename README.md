@@ -1,6 +1,7 @@
 # SLog
 
 Log日志框架，支持输出到控制台，和文件等支持自定义扩展
+![](./img/1513934900618.jpg)
 
 ### 功能说明
 1. 输出Log到控制台
@@ -15,3 +16,55 @@ Log日志框架，支持输出到控制台，和文件等支持自定义扩展
 10. 支持打印扩展等
 
 ### 使用说明
+
+1. 添加依赖
+
+```java
+implementation 'io.github.heartinfei:slogger:1.0.1'
+```
+
+2. 初始化
+```java
+public class SApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        S.init(this);
+        if (BuildConfig.DEBUG) {
+            S.addPlant(new DebugPlan());    //输出到控制台
+        } else {
+            S.addPlant(new ReleasePlan(path)); //输出到文件
+        }
+    }
+}
+
+```
+3. 使用 
+```
+//普通输出
+S.i("Test");
+
+//Error输出
+S.e(...);
+
+//自定义Tag
+S.log("MyTag","Message .....");
+
+```
+
+4. 自定义`Configuration`
+
+```java
+Configuration config = new Configuration.Builder(this)
+                .trackInfoDeep(Integer.MAX_VALUE)
+                .tag("S_LOG") //default is "SApplication"
+                .isPrintLineNo(true)    //defaut true
+                .isPrintTag(true)       //defaut true
+                .isPrintTrackInfo(true) //defaut true
+                .isShowThreadInfo(true) //defaut true
+                .build();
+S.addConfig(c);
+
+```
+
+5. 其他请参考[Demo](https://github.com/heartinfei/SLog)
