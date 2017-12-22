@@ -1,14 +1,11 @@
 package io.github.heartinfei.superlog;
 
-import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import io.github.heartinfei.slogger.Configuration;
 import io.github.heartinfei.slogger.S;
-import io.github.heartinfei.slogger.plan.DebugPlan;
-import io.github.heartinfei.slogger.plan.ReleasePlan;
 
 public class TestActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -21,10 +18,8 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 .trackInfoDeep(10)
                 .tag("Fucking")
                 .build();
-        S.addPlant(new DebugPlan());
         S.addConfig(c);
-        String path = Environment.getExternalStorageDirectory().getPath() + "/SuperLog/";
-        S.addPlant(new ReleasePlan(path));
+
     }
 
     @Override

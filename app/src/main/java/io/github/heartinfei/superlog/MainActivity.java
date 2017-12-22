@@ -24,6 +24,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         S.init(getApplication());
+        S.addPlant(new DebugPlan());
+        String path = Environment.getExternalStorageDirectory().getPath() + "/SuperLog/";
+        S.addPlant(new ReleasePlan(path));
     }
 
     @Override

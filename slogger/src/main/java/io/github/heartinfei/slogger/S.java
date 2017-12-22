@@ -80,8 +80,7 @@ public class S {
         @Override
         public void onActivityDestroyed(Activity activity) {
             flush();
-            String key = activity.getClass().getSimpleName();
-            USER_CONF.remove(key);
+            removeConfig(activity.getClass());
         }
     };
 
@@ -116,8 +115,8 @@ public class S {
     }
 
     @UiThread
-    public synchronized static void addConfig(Configuration c) {
-        USER_CONF.put(c.getTargetClassName(), c);
+    public static void addConfig(Configuration c) {
+        USER_CONF.put(c.getTargetContextName(), c);
     }
 
     public static void removeConfig(Class<?> cls) {

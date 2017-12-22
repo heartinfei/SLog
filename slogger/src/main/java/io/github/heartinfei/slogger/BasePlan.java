@@ -116,7 +116,9 @@ public abstract class BasePlan {
     private List<StackTraceElement> extractCurrentAppStackTrack(String pkgName) {
         List<StackTraceElement> result = new ArrayList<>();
         try {
-            for (StackTraceElement traceElement : Thread.currentThread().getStackTrace()) {
+            StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+            for (int i = stackTraceElements.length - 1; i >= 0; i--) {
+                StackTraceElement traceElement = stackTraceElements[i];
                 if (traceElement.getClassName().contains(pkgName)) {
                     result.add(traceElement);
                 }
