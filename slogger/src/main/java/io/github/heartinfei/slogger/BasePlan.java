@@ -2,6 +2,7 @@ package io.github.heartinfei.slogger;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -23,37 +24,45 @@ public abstract class BasePlan {
     /**
      * 输出Log信息
      *
-     * @param c   配置信息
+     * @param tag 配置信息
      * @param msg log内容
      */
-    protected void logInfo(@NonNull Configuration c, @Nullable List<String> msg) {
+    protected void logInfo(@NonNull String tag, @Nullable List<String> msg) {
     }
 
     /**
      * 输出错误信息
      *
-     * @param c
+     * @param tag
      * @param msg
      */
-    protected void logErro(@NonNull Configuration c, @Nullable List<String> msg) {
+    protected void logError(@NonNull String tag, @Nullable List<String> msg) {
     }
 
-    protected void i(Configuration conf, String... msgs) {
+    protected void i(Configuration conf, String tag, Object... msgs) {
         String header = generateLogHeader(conf);
-        for (String msg : msgs) {
-            logInfo(conf, buildMessage(header, msg));
+        for (Object msg : msgs) {
+            logInfo(TextUtils.isEmpty(tag) ? conf.getTag() : tag, buildMessage(header, msg));
         }
     }
 
-    protected void e(Configuration conf, Throwable... msgs) {
+    protected void e(Configuration conf, String tag, Throwable... msgs) {
         for (Throwable t : msgs) {
-            logErro(conf, buildMessage(null, getThrowableInfo(t)));
+            List<String> errorContent = buildMessage(null, getThrowableInfo(t));
+            logError(TextUtils.isEmpty(tag) ? conf.getTag() : tag, errorContent);
         }
     }
 
-    private List<String> buildMessage(String header, @Nullable String msg) {
-        if (msg == null) {
+    private List<String> buildMessage(String header, @Nullable Object o) {
+        String msg;
+        if (o == null) {
             msg = "";
+        } else {
+            if (o instanceof String) {
+                msg = (String) o;
+            } else {
+                msg = o.toString();
+            }
         }
         if (header == null) {
             header = "";
@@ -131,8 +140,8 @@ public abstract class BasePlan {
         deep = deep >= traceElements.size() ? traceElements.size() : 0;
         for (int i = 0; i < deep; i++) {
             StackTraceElement traceElement = traceElements.get(i);
-            result.add(offset + traceElement.toString() + "\n");
-            offset += "↳";
+            result.add(offset + "↳" + traceElement.toString() + "\n");
+            offset += " ";
         }
         return result;
     }
@@ -160,7 +169,7 @@ public abstract class BasePlan {
         return sw.toString();
     }
 
-    public boolean flush(){
+    public boolean flush() {
         return true;
     }
 }

@@ -16,16 +16,16 @@ import io.github.heartinfei.slogger.Configuration;
  */
 public class DebugPlan extends BasePlan {
     @Override
-    protected void logInfo(@NonNull Configuration c, @Nullable List<String> msgs) {
+    protected void logInfo(@NonNull String tag, @Nullable List<String> msgs) {
         for (String msg : msgs) {
-            Log.i(c.getTag(), msg);
+            Log.i(tag, msg);
         }
     }
 
     @Override
-    protected void logErro(@NonNull Configuration c, @Nullable List<String> msgs) {
+    protected void logError(@NonNull String tag, @Nullable List<String> msgs) {
         for (String msg : msgs) {
-            Log.e(c.getTag(), msg);
+            Log.e(tag, msg);
         }
     }
 }

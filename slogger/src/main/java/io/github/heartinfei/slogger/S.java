@@ -2,7 +2,7 @@ package io.github.heartinfei.slogger;
 
 import android.app.Activity;
 import android.app.Application;
-import android.os.Bundle;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 
@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import io.github.heartinfei.slogger.plan.TagWatcher;
 
 /**
  * 简介：日志打印工具类
@@ -23,8 +25,12 @@ public class S {
      *
      * @param msg 消息
      */
-    public static void i(String... msg) {
-        DELEGATE.i(getCurrentConfigration(), msg);
+    public static void i(Object... msg) {
+        tag(null, msg);
+    }
+
+    public static void tag(String tag, Object... msg) {
+        DELEGATE.i(getCurrentConfigration(), tag, msg);
     }
 
     /**
@@ -33,13 +39,17 @@ public class S {
      * @param msg
      */
     public static void e(Throwable... msg) {
-        DELEGATE.e(getCurrentConfigration(), msg);
+        tag(null, msg);
+    }
+
+    public static void tag(String tag, Throwable... msg) {
+        DELEGATE.e(getCurrentConfigration(), tag, msg);
     }
 
     /**
      * 如果当前类不存在用户的自定义配置信息使用默认配置信息
      */
-    private static Configuration GLOADBAL_CONF;
+    private static Configuration GLOBAL_CONF;
     /**
      * 用户自定义的Log配置信息
      * key 类名
@@ -50,18 +60,18 @@ public class S {
     private static BasePlan[] plansArray = new BasePlan[0];
     private static final BasePlan DELEGATE = new BasePlan() {
         @Override
-        public void i(Configuration conf, String... msgs) {
+        public void i(Configuration conf, String tag, Object... msgs) {
             BasePlan[] plans = plansArray;
             for (BasePlan plan : plans) {
-                plan.i(conf, msgs);
+                plan.i(conf, tag, msgs);
             }
         }
 
         @Override
-        public void e(Configuration conf, Throwable... msgs) {
+        public void e(Configuration conf, String tag, Throwable... msgs) {
             BasePlan[] plans = plansArray;
             for (BasePlan plan : plans) {
-                plan.e(conf, msgs);
+                plan.e(conf, tag, msgs);
             }
         }
     };
@@ -70,7 +80,8 @@ public class S {
         @Override
         public void onActivityDestroyed(Activity activity) {
             flush();
-            USER_CONF.remove(activity.getClass().getSimpleName());
+            String key = activity.getClass().getSimpleName();
+            USER_CONF.remove(key);
         }
     };
 
@@ -86,27 +97,27 @@ public class S {
     }
 
 
-    public static void init(Application app) {
+    public static void init(Context app) {
         init(app, null);
     }
 
-    public static void init(@NonNull Application app, Configuration configuration) {
+    public static synchronized void init(@NonNull Context app, Configuration configuration) {
         if (app == null) {
             throw new RuntimeException("Application must be not null!");
         }
         if (configuration == null) {
-            GLOADBAL_CONF = new Configuration.Builder(app.getClass())
+            GLOBAL_CONF = new Configuration.Builder(app)
                     .build();
         } else {
-            GLOADBAL_CONF = configuration;
+            GLOBAL_CONF = configuration;
         }
 
-        app.registerActivityLifecycleCallbacks(WATCHER);
+        ((Application) app.getApplicationContext()).registerActivityLifecycleCallbacks(WATCHER);
     }
 
     @UiThread
-    public static void addConfig(Configuration c) {
-        USER_CONF.put(getCurrentKey(), c);
+    public synchronized static void addConfig(Configuration c) {
+        USER_CONF.put(c.getTargetClassName(), c);
     }
 
     public static void removeConfig(Class<?> cls) {
@@ -133,9 +144,18 @@ public class S {
 
     private static String getCurrentKey() {
         StackTraceElement[] traceElements = Thread.currentThread().getStackTrace();
-        String declaringClass = traceElements[traceElements.length - 1].getClassName();
-        int index = declaringClass.indexOf("$");
-        return index > 0 ? declaringClass.substring(0, index) : declaringClass;
+        String declaringClass = null;
+        for (int i = traceElements.length - 1; i >= 0; i--) {
+            if (GLOBAL_CONF == null) {
+                throw new RuntimeException("Global Configuration is null. Use S.init(...) first.");
+            }
+            declaringClass = traceElements[i].getClassName();
+            if (declaringClass.contains(GLOBAL_CONF.getPkgName())) {
+                int index = declaringClass.indexOf("$");
+                return index > 0 ? declaringClass.substring(0, index) : declaringClass;
+            }
+        }
+        return "";
     }
 
     private static Configuration getConfigration(String key) {
@@ -145,7 +165,7 @@ public class S {
     private static Configuration getCurrentConfigration() {
         Configuration c = getConfigration(getCurrentKey());
         if (c == null) {
-            c = GLOADBAL_CONF;
+            c = GLOBAL_CONF;
         }
         return c;
     }

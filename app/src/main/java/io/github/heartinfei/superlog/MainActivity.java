@@ -1,5 +1,6 @@
 package io.github.heartinfei.superlog;
 
+import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,31 +23,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        S.addPlant(new DebugPlan());
-        String path = Environment.getExternalStorageDirectory().getPath()+"/SuperLog/";
-        S.addPlant(new ReleasePlan(path));
-        Configuration c = new Configuration.Builder(this.getClass())
-                .isPrintTrackInfo(true)
-                .trackInfoDeep(10)
-                .tag("Fucking")
-                .build();
-        S.init(getApplication(), c);
-        S.i(getClass().getName());
-        S.i(getClass().getSimpleName());
+        S.init(getApplication());
     }
-
-    int i = 0;
 
     @Override
     public void onClick(View v) {
-//        test();
-//        S.e(new RuntimeException("Fuck"));
-        S.i("测试" + i++);
-        S.flush();
-    }
-
-    private void test() {
-        S.i("hello");
+        S.i("Hello");
+        startActivity(new Intent(this, TestActivity.class));
     }
 
     public static void main(String arg[]) {
@@ -55,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static void test(int i) {
         String tag = "我是" + i;
-        for (int j = 0; j < 100; j++) {
+        for (int j = 0; j < 10000; j++) {
             Log.i(tag, "只输出" + i);
         }
     }

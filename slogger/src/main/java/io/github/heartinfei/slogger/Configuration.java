@@ -1,5 +1,9 @@
 package io.github.heartinfei.slogger;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * 简介：配置信息
  *
@@ -36,9 +40,12 @@ public class Configuration {
      */
     private boolean showThreadInfo = true;
 
+    private String targetClassName;
+
     private String pkgName;
 
     public Configuration(Builder builder) {
+        this.targetClassName = builder.clsName;
         this.tag = builder.tag;
         this.trackInfoDeep = builder.trackInfoDeep;
         this.isPrintTag = builder.isPrintTag;
@@ -46,6 +53,10 @@ public class Configuration {
         this.isPrintLineNo = builder.isPrintLineNo;
         this.showThreadInfo = builder.showThreadInfo;
         this.pkgName = builder.pkgName;
+    }
+
+    public String getTargetClassName() {
+        return targetClassName;
     }
 
     public String getPkgName() {
@@ -104,23 +115,29 @@ public class Configuration {
         private String tag;
         private int trackInfoDeep = DEFAULT_DEEP;
         private boolean isPrintTrackInfo = false;
+        private String clsName;
         private boolean isPrintTag = true;
         private boolean isPrintLineNo = true;
         private boolean showThreadInfo = true;
         private final String pkgName;
 
-        public Builder(Class<?> cls) {
-            this.tag = cls.getSimpleName();
-            this.pkgName = cls.getPackage().getName();
+        public Builder(@NonNull Context ctx) {
+            this.clsName = this.tag = ctx.getClass().getSimpleName();
+            this.pkgName = ctx.getPackageName();
         }
 
-        public Builder(Class<?> cls,String tag) {
+        public Builder(Class<?> cls, String tag) {
             this.pkgName = cls.getPackage().getName();
             this.tag = tag;
         }
 
+        private boolean checkTag(String tag) {
+            //不允许特殊字符
+            return true;
+        }
+
         public Builder tag(String val) {
-            tag = val;
+            this.tag = val;
             return this;
         }
 

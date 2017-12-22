@@ -1,4 +1,4 @@
-package io.github.heartinfei.slogger;
+package io.github.heartinfei.slogger.plan;
 
 import android.app.Activity;
 import android.app.Application;
