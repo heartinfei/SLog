@@ -67,4 +67,7 @@ S.addConfig(c);
 
 ```
 
-5. 其他请参考[Demo](https://github.com/heartinfei/SLog)
+5. 扩展Log输出方式
+通过继承`BasePlan`可创建自定义`Plan`，可参考`ReleasePlan`的实现
+
+6. 其他请参考[Demo](https://github.com/heartinfei/SLog)
