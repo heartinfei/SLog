@@ -20,7 +20,7 @@
 1. 添加依赖
 
 ```java
-implementation 'io.github.heartinfei:slogger:1.0.1'
+implementation 'io.github.heartinfei:slogger:1.0.2'
 ```
 
 2. 初始化
