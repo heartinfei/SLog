@@ -12,8 +12,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,8 +28,10 @@ import java.util.regex.Pattern;
  */
 class LogWriter implements Runnable {
     private final static String REX = "(^##(.+)##$)";
-    private final static Pattern p = Pattern.compile(REX);
-    private final String SP = "\n#################################\n";
+    private final static Pattern P_N = Pattern.compile(REX);
+    private static final String P_D = "yyyy-MM-dd HH:mm:ss";
+    private SimpleDateFormat dateFormat = new SimpleDateFormat(P_D, Locale.CHINA);
+    private final String SP = "\n##############%s###################\n";
 
     private Map<String, FileWriter> writerMap = new HashMap<>();
     private String mCacheDirPath;
@@ -34,7 +39,7 @@ class LogWriter implements Runnable {
     /**
      * Log文件的最大尺寸
      */
-    private long MAX_LOG_FILE_LENGTH = 4 * 1024 * 1024;
+    private final long MAX_LOG_FILE_LENGTH = 4 * 1024 * 1024;
 
     public LogWriter(String logs, String dir) {
         this.logs = logs;
@@ -52,7 +57,7 @@ class LogWriter implements Runnable {
         }
     }
 
-    private void write() throws IOException {
+    private void write() {
         File cacheDir = new File(mCacheDirPath);
         if (!cacheDir.exists() && !cacheDir.mkdirs()) {
             throw new RuntimeException("Create cache dir fail");
@@ -61,26 +66,40 @@ class LogWriter implements Runnable {
         String line;
         String tag = null;
         FileWriter writer = null;
-        while ((line = reader.readLine()) != null) {
-            try {
-                Matcher m = p.matcher(line);
-                if (m.matches()) {
-                    tag = m.group(2);
-                    writer = getWriter(tag);
-                    writer.write(SP);
-                    writerMap.put(tag, writer);
-                    continue;
-                }
-                if (writer != null) {
-                    writer.write(line + "\n");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (tag != null) {
-                    writerMap.remove(tag);
+        try {
+            while ((line = reader.readLine()) != null) {
+                try {
+                    Matcher m = P_N.matcher(line);
+                    if (m.matches()) {
+                        tag = m.group(2);
+                        writer = getWriter(tag);
+                        writer.write(String.format(SP, getPrintDate()));
+                        writerMap.put(tag, writer);
+                        continue;
+                    }
+                    if (writer != null) {
+                        writer.write(line + "\n");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (tag != null) {
+                        writerMap.remove(tag);
+                    }
                 }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    private String getPrintDate() {
+        return dateFormat.format(new Date());
     }
 
     private FileWriter getWriter(String tag) throws Exception {
