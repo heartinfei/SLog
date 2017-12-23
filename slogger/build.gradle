@@ -7,7 +7,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0.1"
+        versionName "1.0.2"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -46,4 +46,3 @@ publish {
     desc = 'Android log tool.'//描述，不重要
     website = 'https://github.com/heartinfei/SLog'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
 }
-//./gradlew clean build bintrayUpload -PbintrayUser=heartinfei -PbintrayKey=63cbd0426d0639fb669fdd1071530cdeeae7e5eb -PdryRun=false
