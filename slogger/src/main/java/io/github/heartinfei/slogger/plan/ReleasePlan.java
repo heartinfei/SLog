@@ -35,10 +35,6 @@ public class ReleasePlan extends BasePlan {
     private int mBufferSize = DEFAULT_BUFFER_SIZE;
 
 
-    /**
-     * 日志存储线程池
-     * 使用线程池减少线程竞争以及数据安全
-     */
     private ExecutorService writeExecutor = Executors.newSingleThreadExecutor();
 
 
