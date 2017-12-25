@@ -4,8 +4,8 @@
 ![输出到控制台](./img/1513934900618.jpg)
 ![输出到文件](./img/1514028944351.jpg)
 
-轻量级Log日志框架，支持输出到控制台，和文件等支持自定义扩展。
-输出到文件的Log以自定义 *Tag* 作为文件名单个日志文件限制大小为4M。
+轻量级Log日志框架，支持输出到控制台和文件等支持自定义扩展。
+输出到文件的Log以自定义 *Tag* 作为文件名，单个日志文件限制大小为4M。
 ### 功能说明
 1. 输出Log到控制台
 2. 输出Log到文件
@@ -22,7 +22,7 @@
 1. 添加依赖
 
 ```java
-implementation 'io.github.heartinfei:slogger:1.0.2'
+implementation 'io.github.heartinfei:slogger:1.0.4'
 ```
 
 2. 初始化
