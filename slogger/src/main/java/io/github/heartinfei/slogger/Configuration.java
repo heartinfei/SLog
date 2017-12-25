@@ -1,6 +1,7 @@
 package io.github.heartinfei.slogger;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 
 /**
@@ -124,7 +125,7 @@ public class Configuration {
         private boolean isPrintLineNo = true;
         private boolean isPrintThreadInfo = true;
         private String targetContextName;
-        private final String pkgName;
+        private String pkgName;
 
         public Builder(@NonNull Context ctx) {
             this.targetContextName = ctx.getClass().getName();
@@ -136,6 +137,11 @@ public class Configuration {
             this.targetContextName = ctx.getClass().getName();
             this.pkgName = ctx.getPackageName();
             this.tag = tag;
+        }
+
+        public Builder pkgName(String pn) {
+            this.pkgName = pn;
+            return this;
         }
 
         private boolean checkTag(String tag) {

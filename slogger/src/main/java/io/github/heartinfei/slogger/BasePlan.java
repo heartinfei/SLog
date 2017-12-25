@@ -96,8 +96,10 @@ public abstract class BasePlan {
         //当前App的堆栈信息
         List<String> trackInfos =
                 getTrackInfo(extractCurrentAppStackTrack(config.getPkgName()), config.getTrackInfoDeep());
-        if (config.isPrintLineNo()) {
+        if (trackInfos.size() > 0 && config.isPrintLineNo()) {
             msgBuilder.append(trackInfos.remove(0));
+        } else {
+            throw new RuntimeException("包名和源码不匹配请");
         }
         if (config.isPrintTrackInfo()) {
             for (String trackInfo : trackInfos) {

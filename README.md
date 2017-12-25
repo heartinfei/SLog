@@ -58,13 +58,15 @@ S.log("MyTag","Message .....");
 
 ```java
 Configuration config = new Configuration.Builder(this)
-                .trackInfoDeep(Integer.MAX_VALUE) //打印堆栈深度
-                .tag("S_LOG")           //default is Application name
-                .isPrintLineNo(true)    //打印行号 defaut true
-                .isPrintTag(true)       //打印Tag defaut true
-                .isPrintTrackInfo(true) //打印堆栈 defaut true
-                .isPrintThreadInfo(true)//打印线程信息 defaut true
-                .build();
+               .trackInfoDeep(Integer.MAX_VALUE) //打印堆栈深度
+               //确保你的包名和源码包一致,如果你的程序存在多个构建这里需要注意否则堆栈信息可能不正确
+               .pkgName(BuildConfig.APPLICATION_ID)
+               .tag("S_LOG")           //default is Application name
+               .isPrintLineNo(true)    //打印行号 defaut true
+               .isPrintTag(true)       //打印Tag defaut true
+               .isPrintTrackInfo(true) //打印堆栈 defaut true
+               .isPrintThreadInfo(true)//打印线程信息 defaut true
+               .build();
 S.addConfig(c);
 
 ```

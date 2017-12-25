@@ -18,6 +18,8 @@ public class SApplication extends Application {
         String path = Environment.getExternalStorageDirectory().getPath() + "/SuperLog/";
         Configuration config = new Configuration.Builder(this)
                 .trackInfoDeep(Integer.MAX_VALUE) //打印堆栈深度
+                //确保你的包名和源码包一致,如果你的程序存在多个构建这里需要注意否则堆栈信息可能不正确
+                .pkgName(BuildConfig.APPLICATION_ID)
                 .tag("S_LOG")           //default is Application name
                 .isPrintLineNo(true)    //打印行号 defaut true
                 .isPrintTag(true)       //打印Tag defaut true
