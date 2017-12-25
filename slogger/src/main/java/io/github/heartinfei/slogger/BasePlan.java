@@ -90,7 +90,7 @@ public abstract class BasePlan {
      */
     private String generateLogHeader(Configuration config) {
         StringBuilder msgBuilder = new StringBuilder();
-        if (config.isShowThreadInfo()) {
+        if (config.isPrintThreadInfo()) {
             msgBuilder.append(getThreadInfo());
         }
         //当前App的堆栈信息

@@ -17,12 +17,12 @@ public class SApplication extends Application {
         super.onCreate();
         String path = Environment.getExternalStorageDirectory().getPath() + "/SuperLog/";
         Configuration config = new Configuration.Builder(this)
-                .trackInfoDeep(Integer.MAX_VALUE)
-                .tag("S_LOG") //default is "SApplication"
-                .isPrintLineNo(true)    //defaut true
-                .isPrintTag(true)       //defaut true
-                .isPrintTrackInfo(true) //defaut true
-                .isShowThreadInfo(true) //defaut true
+                .trackInfoDeep(Integer.MAX_VALUE) //打印堆栈深度
+                .tag("S_LOG")           //default is Application name
+                .isPrintLineNo(true)    //打印行号 defaut true
+                .isPrintTag(true)       //打印Tag defaut true
+                .isPrintTrackInfo(true) //打印堆栈 defaut true
+                .isPrintThreadInfo(true)//打印线程信息 defaut true
                 .build();
         S.init(this, config);
         if (BuildConfig.DEBUG) {

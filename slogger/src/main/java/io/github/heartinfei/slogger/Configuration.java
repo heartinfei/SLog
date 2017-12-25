@@ -37,7 +37,7 @@ public class Configuration {
     /**
      * true 打印线程信息
      */
-    private boolean showThreadInfo = true;
+    private boolean isPrintThreadInfo = true;
 
     /**
      *
@@ -56,7 +56,7 @@ public class Configuration {
         this.isPrintTag = builder.isPrintTag;
         this.isPrintTrackInfo = builder.isPrintTrackInfo;
         this.isPrintLineNo = builder.isPrintLineNo;
-        this.showThreadInfo = builder.showThreadInfo;
+        this.isPrintThreadInfo = builder.isPrintThreadInfo;
         this.pkgName = builder.pkgName;
     }
 
@@ -72,12 +72,12 @@ public class Configuration {
         return isPrintTag ? tag : "";
     }
 
-    public boolean isShowThreadInfo() {
-        return showThreadInfo;
+    public boolean isPrintThreadInfo() {
+        return isPrintThreadInfo;
     }
 
-    public void setShowThreadInfo(boolean showThreadInfo) {
-        this.showThreadInfo = showThreadInfo;
+    public void setPrintThreadInfo(boolean printThreadInfo) {
+        this.isPrintThreadInfo = printThreadInfo;
     }
 
     public void setTag(String tag) {
@@ -122,7 +122,7 @@ public class Configuration {
         private boolean isPrintTrackInfo = false;
         private boolean isPrintTag = true;
         private boolean isPrintLineNo = true;
-        private boolean showThreadInfo = true;
+        private boolean isPrintThreadInfo = true;
         private String targetContextName;
         private final String pkgName;
 
@@ -168,8 +168,8 @@ public class Configuration {
             return this;
         }
 
-        public Builder isShowThreadInfo(boolean show) {
-            this.showThreadInfo = show;
+        public Builder isPrintThreadInfo(boolean show) {
+            this.isPrintThreadInfo = show;
             return this;
         }
 

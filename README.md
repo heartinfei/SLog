@@ -58,12 +58,12 @@ S.log("MyTag","Message .....");
 
 ```java
 Configuration config = new Configuration.Builder(this)
-                .trackInfoDeep(Integer.MAX_VALUE)
-                .tag("S_LOG") //default is your application name
-                .isPrintLineNo(true)    //defaut true
-                .isPrintTag(true)       //defaut true
-                .isPrintTrackInfo(true) //defaut true
-                .isShowThreadInfo(true) //defaut true
+                .trackInfoDeep(Integer.MAX_VALUE) //打印堆栈深度
+                .tag("S_LOG")           //default is Application name
+                .isPrintLineNo(true)    //打印行号 defaut true
+                .isPrintTag(true)       //打印Tag defaut true
+                .isPrintTrackInfo(true) //打印堆栈 defaut true
+                .isPrintThreadInfo(true)//打印线程信息 defaut true
                 .build();
 S.addConfig(c);
 
