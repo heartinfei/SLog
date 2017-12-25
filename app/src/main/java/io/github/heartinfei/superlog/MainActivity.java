@@ -32,7 +32,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 testPrint(5);
                 break;
             case R.id.btn_test:
-                startActivity(new Intent(this, TestActivity.class));
+                Intent intent = new Intent(this, TestActivity.class);
+                startActivity(intent);
                 break;
         }
     }
