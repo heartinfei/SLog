@@ -67,7 +67,7 @@ Configuration config = new Configuration.Builder(this)
                .isPrintTrackInfo(true) //打印堆栈 defaut true
                .isPrintThreadInfo(true)//打印线程信息 defaut true
                .build();
-S.addConfig(c);
+S.addConfig(config);
 
 ```
 
