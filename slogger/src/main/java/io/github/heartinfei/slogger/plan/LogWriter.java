@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +34,7 @@ class LogWriter implements Runnable {
     private SimpleDateFormat dateFormat = new SimpleDateFormat(P_D, Locale.CHINA);
     private final String SP = "\n##############%s###################\n";
 
-    private Map<String, FileWriter> writerMap = new HashMap<>();
+    private Map<String, FileWriter> writerMap = new ConcurrentHashMap<>();
     private String mCacheDirPath;
     private String logs;
     /**
