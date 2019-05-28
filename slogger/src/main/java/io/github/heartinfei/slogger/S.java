@@ -33,6 +33,14 @@ public class S {
         DELEGATE.i(getCurrentConfigration(), tag, msg);
     }
 
+    public static S withTag(String tag) {
+        return this;
+    }
+
+    public static S withTrackDeep(int deep){
+        return this;
+    }
+
     /**
      * 打印异常
      *
@@ -58,6 +66,7 @@ public class S {
     private final static Map<String, Configuration> USER_CONF = new ConcurrentHashMap<>();
     private final static List<BasePlan> PLANS = Collections.synchronizedList(new LinkedList<BasePlan>());
     private static BasePlan[] plansArray = new BasePlan[0];
+
     private static final BasePlan DELEGATE = new BasePlan() {
         @Override
         public void i(Configuration conf, String tag, Object... msgs) {

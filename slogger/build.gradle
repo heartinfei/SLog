@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 26
@@ -34,15 +34,15 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
-publish {
-    userOrg = 'heartinfei'//bintray.com用户名
-    groupId = 'io.github.heartinfei'//jcenter上的路径
-    artifactId = 'slogger'//项目名称
-    publishVersion = android.defaultConfig.versionName//版本号
-    desc = 'Android log tool.'//描述，不重要
-    website = 'https://github.com/heartinfei/SLog'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
-}
+//publish {
+//    userOrg = 'heartinfei'//bintray.com用户名
+//    groupId = 'io.github.heartinfei'//jcenter上的路径
+//    artifactId = 'slogger'//项目名称
+//    publishVersion = android.defaultConfig.versionName//版本号
+//    desc = 'Android log tool.'//描述，不重要
+//    website = 'https://github.com/heartinfei/SLog'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
+//}
