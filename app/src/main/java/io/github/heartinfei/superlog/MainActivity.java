@@ -1,16 +1,11 @@
 package io.github.heartinfei.superlog;
 
 import android.content.Intent;
-import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import io.github.heartinfei.slogger.Configuration;
-import io.github.heartinfei.slogger.plan.DebugPlan;
 import io.github.heartinfei.slogger.S;
-import io.github.heartinfei.slogger.plan.ReleasePlan;
 
 /**
  * 简介：Demo

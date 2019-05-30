@@ -6,8 +6,10 @@ import android.view.View;
 
 import io.github.heartinfei.slogger.Configuration;
 import io.github.heartinfei.slogger.S;
+
 /**
  * Demo
+ *
  * @author 王强 on 2017/12/22 249346528@qq.com
  */
 public class TestActivity extends AppCompatActivity implements View.OnClickListener {
@@ -16,12 +18,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        Configuration c = new Configuration.Builder(this)
-                .isPrintTrackInfo(true)
-                .trackInfoDeep(10)
-                .tag("Sugar")
-                .build();
-        S.addConfig(c);
     }
 
     @Override
@@ -36,7 +32,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_tag:
                 //使用自定义Tag
-                S.log("My_Tag", "Customer test");
+                S.tag("My_Tag").i("Customer test");
                 break;
         }
     }
