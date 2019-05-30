@@ -12,21 +12,21 @@ import android.util.Log
  * @author Rango on 2019-05-29 249346528@qq.com
  */
 class Configuration(
-    internal var trackFilter: String? = null,
-    internal  var tag: String? = "",
-    internal  var trackDeep: Int = Int.MAX_VALUE,
-    internal  var isPrintStackInfo: Boolean = true,
-    internal  var isPrintThreadInfo: Boolean = true,
-    internal  var isPrintTimeStamp: Boolean = false
+        internal var trackFilter: String? = null,
+        internal var tag: String? = "",
+        internal var trackDeep: Int = Int.MAX_VALUE,
+        internal var isPrintStackInfo: Boolean = true,
+        internal var isPrintThreadInfo: Boolean = true,
+        internal var isPrintTimeStamp: Boolean = false
 ) : LogPrinter {
 
     constructor(c: Configuration) : this(
-        trackFilter = c.trackFilter,
-        tag = c.tag,
-        trackDeep = c.trackDeep,
-        isPrintStackInfo = c.isPrintStackInfo,
-        isPrintThreadInfo = c.isPrintThreadInfo,
-        isPrintTimeStamp = c.isPrintTimeStamp
+            trackFilter = c.trackFilter,
+            tag = c.tag,
+            trackDeep = c.trackDeep,
+            isPrintStackInfo = c.isPrintStackInfo,
+            isPrintThreadInfo = c.isPrintThreadInfo,
+            isPrintTimeStamp = c.isPrintTimeStamp
     )
 
     fun setPrintTimeStamp(print: Boolean): Configuration {

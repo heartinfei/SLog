@@ -10,17 +10,17 @@ import java.util.regex.Pattern
  * @author Rango on 2019-05-29 249346528@qq.com
  */
 class DebugPlan : BasePlan() {
-    override val fqcnIgnore = listOf(
-            S::class.java.name,
-            S.Companion::class.java.name,
-            BasePlan::class.java.name,
-            DebugPlan::class.java.name
+    override val stackIgnoreFilter = mutableListOf(
+        S::class.java.name,
+        S.Companion::class.java.name,
+        BasePlan::class.java.name,
+        DebugPlan::class.java.name
     )
 
     override val mTag: String?
         get() = super.mTag ?: Throwable().stackTrace
-                .first { it.className !in fqcnIgnore }
-                .let(::createStackElementTag)
+            .first { it.className !in stackIgnoreFilter }
+            .let(::createStackElementTag)
 
     /**
      * Extract the mTag which should be used for the message from the `element`. By default

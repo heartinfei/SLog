@@ -4,13 +4,14 @@ import android.util.Log
 import io.github.heartinfei.slogger.Configuration
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.reflect.KClass
 
 /**
  * @author Rango on 2019-05-29 249346528@qq.com
  */
 abstract class BasePlan {
     private val dateFormater = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-    protected open val fqcnIgnore = listOf<String>()
+    protected open val stackIgnoreFilter = mutableListOf<String>()
 
     @get:JvmSynthetic
     internal val explicitTag = ThreadLocal<String>()
@@ -24,6 +25,11 @@ abstract class BasePlan {
             }
             return tag
         }
+
+    /**Add a stack filter.*/
+    fun addStackIgnoreFilter(clz: KClass<Any>) {
+        stackIgnoreFilter.add(clz.java.name)
+    }
 
     /**
      * Return true should be logged.
@@ -59,7 +65,7 @@ abstract class BasePlan {
         Thread.currentThread().stackTrace
             .filter { element ->
                 val name = element.className
-                val libFilter = name !in fqcnIgnore
+                val libFilter = name !in stackIgnoreFilter
                 val pFilter: Boolean = filter?.let { f ->
                     name.contains(f)
                 } ?: libFilter
