@@ -1,7 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
-//apply plugin: 'com.novoda.bintray-release'
+
+//apply plugin:'com.github.dcendents.android-maven'
+//apply plugin:'com.jfrog.bintray'
 
 android {
     compileSdkVersion 26
@@ -19,8 +21,8 @@ android {
 
     buildTypes {
         release {
-//            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
@@ -37,9 +39,9 @@ dependencies {
 //    androidTestImplementation 'com.android.support.test:runner:1.0.2'
 //    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
-//repositories {
+repositories {
 //    mavenCentral()
-//}
+}
 
 //publish {
 //    userOrg = 'heartinfei'//bintray.com用户名
