@@ -83,7 +83,7 @@ class DebugPlan : BasePlan() {
     companion object {
         private const val MAX_LOG_LENGTH = 4000
         private const val MAX_TAG_LENGTH = 23
-        //Extract default log tag when tag is null.
+        //Extract default log withTag when withTag is null.
         private val ANONYMOUS_CLASS = Pattern.compile("(\\$\\d+)+$")
     }
 }

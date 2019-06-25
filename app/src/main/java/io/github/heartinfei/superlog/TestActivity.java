@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import io.github.heartinfei.slogger.Configuration;
 import io.github.heartinfei.slogger.S;
 
 /**
@@ -32,7 +31,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_tag:
                 //使用自定义Tag
-                S.tag("My_Tag").i("Customer test");
+                S.withTag("My_Tag").i("Customer test");
                 break;
         }
     }

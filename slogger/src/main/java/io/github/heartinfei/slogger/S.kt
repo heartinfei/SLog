@@ -33,7 +33,7 @@ class S private constructor() {
         }
 
         @JvmStatic
-        fun trackFilter(filter: String): Configuration {
+        fun withTrackFilter(filter: String): Configuration {
             if (CONFIG == null) {
                 throw RuntimeException("")
             }
@@ -41,7 +41,7 @@ class S private constructor() {
         }
 
         @JvmStatic
-        fun tag(tag: String): Configuration {
+        fun withTag(tag: String): Configuration {
             if (CONFIG == null) {
                 throw RuntimeException("")
             }
@@ -49,7 +49,7 @@ class S private constructor() {
         }
 
         @JvmStatic
-        fun trackDeep(level: Int): Configuration {
+        fun withTrackDeep(level: Int): Configuration {
             if (CONFIG == null) {
                 throw RuntimeException("")
             }
@@ -57,7 +57,7 @@ class S private constructor() {
         }
 
         @JvmStatic
-        fun printThreadInfo(print: Boolean): Configuration {
+        fun withThreadInfo(print: Boolean): Configuration {
             if (CONFIG == null) {
                 throw RuntimeException("")
             }

@@ -4,7 +4,7 @@ import android.util.Log
 
 /**
  * [trackFilter] Used to filter stack
- * [tag]    Log tag
+ * [tag]    Log withTag
  * [trackDeep] The stack deep to print.
  * [isPrintStackInfo] true print stack info.
  * [isPrintThreadInfo] true print thread info
