@@ -2,9 +2,9 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 
-//apply plugin:'com.github.dcendents.android-maven'
-//apply plugin:'com.jfrog.bintray'
-//apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
 
 android {
     compileSdkVersion 26
@@ -41,14 +41,38 @@ dependencies {
 //    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 repositories {
-//    mavenCentral()
+    mavenCentral()
 }
 
 //publish {
 //    userOrg = 'heartinfei'//bintray.com用户名
 //    groupId = 'io.github.heartinfei'//jcenter上的路径
 //    artifactId = 'slogger'//项目名称
-//    publishVersion = android.defaultConfig.versionName//版本号
+//    publishVersion = '2.0.0'//版本号
 //    desc = 'Android log tool.'//描述，不重要
-//    website = 'https://github.com/heartinfei/SLog'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
+//    website = 'https://github.com/heartinfei/SLog'//网站，不重要；
 //}
+
+ext {
+    bintrayRepo = "maven"
+    bintrayName = "slogger"
+    libraryName = "SupperLog"
+
+    publishedGroupId = "io.github.heartinfei"
+    artifact = "slogger"
+    libraryVersion = android.defaultConfig.versionName
+    libraryDescription = "Android Log."
+    siteUrl = "https://github.com/heartinfei/SLog"
+    gitUrl = "https://github.com/heartinfei/SLog.git"
+    developerId = "heatinfei"
+    developerName = "Rango"
+    developerEmail = "heartinfei@gmail.com"
+    licenseName = "The Apache Software License,Version 2.0"
+    licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+    allLicenses = ["Apache-2.0"]
+}
+
+if(project.rootProject.file("local.properties").exists()){
+    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+}
