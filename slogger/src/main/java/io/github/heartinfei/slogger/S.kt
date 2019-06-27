@@ -35,7 +35,7 @@ class S private constructor() {
         @JvmStatic
         fun withTrackFilter(filter: String): Configuration {
             if (CONFIG == null) {
-                throw RuntimeException("")
+                throw RuntimeException("Init config is null call S.init(...) first.")
             }
             return Configuration(CONFIG!!).setTrackFilter(filter)
         }
@@ -43,7 +43,7 @@ class S private constructor() {
         @JvmStatic
         fun withTag(tag: String): Configuration {
             if (CONFIG == null) {
-                throw RuntimeException("")
+                throw RuntimeException("Init config is null call S.init(...) first.")
             }
             return Configuration(CONFIG!!).setTag(tag)
         }
@@ -51,15 +51,23 @@ class S private constructor() {
         @JvmStatic
         fun withTrackDeep(level: Int): Configuration {
             if (CONFIG == null) {
-                throw RuntimeException("")
+                throw RuntimeException("Init config is null call S.init(...) first.")
             }
-            return Configuration(CONFIG!!).setTrackDeep(level)
+            return Configuration(CONFIG!!).setPrintTrackInfo(true).setTrackDeep(level)
+        }
+
+        @JvmStatic
+        fun withTrackInfo(stat: Boolean): Configuration {
+            if (CONFIG == null) {
+                throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
+            }
+            return Configuration(CONFIG!!).setPrintTrackInfo(stat)
         }
 
         @JvmStatic
         fun withThreadInfo(print: Boolean): Configuration {
             if (CONFIG == null) {
-                throw RuntimeException("")
+                throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
             }
             return Configuration(CONFIG!!).setPrintThreadInfo(print)
         }
@@ -69,10 +77,6 @@ class S private constructor() {
             if (CONFIG == null) {
                 throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
             }
-            for (plan in plans) {
-                requireNotNull(plan)
-            }
-
             synchronized(this.plans) {
                 Collections.addAll(this.plans, *plans)
                 planArray = this.plans.toTypedArray()

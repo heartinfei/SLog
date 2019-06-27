@@ -14,7 +14,7 @@ import android.util.Log
 class Configuration(
         internal var trackFilter: String? = null,
         internal var tag: String? = "",
-        internal var trackDeep: Int = Int.MAX_VALUE,
+        internal var trackDeep: Int = 1,
         internal var isPrintStackInfo: Boolean = true,
         internal var isPrintThreadInfo: Boolean = true,
         internal var isPrintTimeStamp: Boolean = false
