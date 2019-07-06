@@ -9,57 +9,49 @@ package io.github.heartinfei.slogger
  * [printTimeStamp] true print timestamp.
  * @author Rango on 2019-05-29 249346528@qq.com
  */
-class Configuration(
-        var trackFilter: String? = null,
-        var tag: String? = "",
-        var trackDeep: Int = 1,
-        var printTrackInfo: Boolean = true,
-        var printThreadInfo: Boolean = true,
-        var printTimeStamp: Boolean = false) {
+class Configuration : Cloneable {
+    internal var trackFilter: String? = null
+    internal var tag: String? = ""
+    internal var trackDeep: Int = 1
+    internal var printTrackInfo: Boolean = true
+    internal var printThreadInfo: Boolean = true
+    internal var printTimeStamp: Boolean = false
 
-    constructor(c: Configuration) : this(
-            trackFilter = c.trackFilter,
-            tag = c.tag,
-            trackDeep = c.trackDeep,
-            printTrackInfo = c.printTrackInfo,
-            printThreadInfo = c.printThreadInfo,
-            printTimeStamp = c.printTimeStamp
-    )
+    public override fun clone(): Configuration {
+        return super.clone() as Configuration
+    }
 
-    fun printThreadInfo(arg: Boolean): Configuration {
+    fun setPrintThreadInfo(arg: Boolean): Configuration {
         this.printThreadInfo = arg
         return this
     }
 
-    fun printTimeStamp(arg: Boolean): Configuration {
+    fun setPrintTimeStamp(arg: Boolean): Configuration {
         this.printTimeStamp = arg
         return this
     }
 
-    fun printTrackInfo(arg: Boolean): Configuration {
+    fun setPrintTrackInfo(arg: Boolean): Configuration {
         this.printTrackInfo = arg
         return this
     }
 
-    fun trackFilter(arg: String): Configuration {
+    fun setTrackFilter(arg: String): Configuration {
         this.trackFilter = arg
         return this
     }
 
-    fun trackDeep(deep: Int): Configuration {
+    fun setTrackDeep(deep: Int): Configuration {
         this.trackDeep = deep
         return this
     }
 
-    fun tag(arg: String): Configuration {
+    fun setTag(arg: String): Configuration {
         this.tag = arg
         return this
     }
 }
 
-/**
- * 链式调用封装
- */
 class LogPrinterProxy(private val config: Configuration,
                       private val printer: LogPrinter) : LogPrinter by printer {
 

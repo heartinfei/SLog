@@ -2,6 +2,8 @@ package io.github.heartinfei.slogger.plan
 
 import android.util.Log
 import io.github.heartinfei.slogger.Configuration
+import io.github.heartinfei.slogger.LogPrinterProxy
+import io.github.heartinfei.slogger.S
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.max
@@ -11,8 +13,13 @@ import kotlin.reflect.KClass
  * @author Rango on 2019-05-29 249346528@qq.com
  */
 abstract class BasePlan {
-    private val dateFormater = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-    protected open val stackIgnoreFilter = mutableListOf<String>()
+    private val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    protected open val stackIgnoreFilter = mutableListOf<String>(
+            S::class.java.name,
+            S.Companion::class.java.name,
+            BasePlan::class.java.name,
+            LogPrinterProxy::class.java.name
+    )
 
     @get:JvmSynthetic
     internal val explicitTag = ThreadLocal<String>()
@@ -28,8 +35,8 @@ abstract class BasePlan {
         }
 
     /**Add a stack filter.*/
-    fun addStackIgnoreFilter(clz: KClass<Any>) {
-        stackIgnoreFilter.add(clz.java.name)
+    fun addStackIgnoreFilter(filter: String) {
+        stackIgnoreFilter.add(filter)
     }
 
     /**
@@ -112,7 +119,7 @@ abstract class BasePlan {
     }
 
     private fun getTimeStr(): String {
-        return dateFormater.format(Date())
+        return dateFormatter.format(Date())
     }
 
     /**

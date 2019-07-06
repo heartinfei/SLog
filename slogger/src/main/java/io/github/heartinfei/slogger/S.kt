@@ -37,7 +37,7 @@ class S private constructor() {
             if (CONFIG == null) {
                 throw RuntimeException("Init config is null call S.init(...) first.")
             }
-            val config = Configuration(CONFIG!!).apply {
+            val config = CONFIG!!.clone().apply {
                 this.tag = tag
             }
             return LogPrinterProxy(config, this)
@@ -48,7 +48,7 @@ class S private constructor() {
             if (CONFIG == null) {
                 throw RuntimeException("Init config is null call S.init(...) first.")
             }
-            val config = Configuration(CONFIG!!).apply {
+            val config = CONFIG!!.clone().apply {
                 this.trackFilter = filter
             }
             return LogPrinterProxy(config, this)
@@ -59,7 +59,7 @@ class S private constructor() {
             if (CONFIG == null) {
                 throw RuntimeException("Init config is null call S.init(...) first.")
             }
-            val config = Configuration(CONFIG!!).apply {
+            val config = CONFIG!!.clone().apply {
                 this.trackDeep = level
             }
             return LogPrinterProxy(config, this)
@@ -71,7 +71,7 @@ class S private constructor() {
                 throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
             }
 
-            val config = Configuration(CONFIG!!).apply {
+            val config = CONFIG!!.clone().apply {
                 this.printTrackInfo = stat
             }
             return LogPrinterProxy(config, this)
@@ -82,7 +82,7 @@ class S private constructor() {
             if (CONFIG == null) {
                 throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
             }
-            val config = Configuration(CONFIG!!).apply {
+            val config = CONFIG!!.clone().apply {
                 this.printThreadInfo = print
             }
             return LogPrinterProxy(config, this)
@@ -93,7 +93,7 @@ class S private constructor() {
             if (CONFIG == null) {
                 throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
             }
-            val config = Configuration(CONFIG!!).apply {
+            val config = CONFIG!!.clone().apply {
                 this.printTimeStamp = value
             }
             return LogPrinterProxy(config, this)

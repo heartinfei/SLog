@@ -2,6 +2,7 @@ package io.github.heartinfei.slogger.plan
 
 import android.os.Build
 import android.util.Log
+import io.github.heartinfei.slogger.LogPrinterProxy
 import io.github.heartinfei.slogger.S
 import java.util.regex.Pattern
 
@@ -10,17 +11,15 @@ import java.util.regex.Pattern
  * @author Rango on 2019-05-29 249346528@qq.com
  */
 class DebugPlan : BasePlan() {
-    override val stackIgnoreFilter = mutableListOf(
-        S::class.java.name,
-        S.Companion::class.java.name,
-        BasePlan::class.java.name,
-        DebugPlan::class.java.name
-    )
+
+    init {
+        addStackIgnoreFilter(DebugPlan::class.java.name)
+    }
 
     override val mTag: String?
         get() = super.mTag ?: Throwable().stackTrace
-            .first { it.className !in stackIgnoreFilter }
-            .let(::createStackElementTag)
+                .first { it.className !in stackIgnoreFilter }
+                .let(::createStackElementTag)
 
     /**
      * Extract the mTag which should be used for the message from the `element`. By default
@@ -31,6 +30,7 @@ class DebugPlan : BasePlan() {
      */
     private fun createStackElementTag(element: StackTraceElement): String? {
         var tag = element.className.substringAfterLast('.')
+                .plus("(${element.methodName})")
         val m = ANONYMOUS_CLASS.matcher(tag)
         if (m.find()) {
             tag = m.replaceAll("")

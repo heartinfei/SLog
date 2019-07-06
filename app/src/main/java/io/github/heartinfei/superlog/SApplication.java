@@ -15,18 +15,18 @@ public class SApplication extends Application {
     public void onCreate() {
         super.onCreate();
         if (BuildConfig.DEBUG) {
-            Configuration debugConfig = new Configuration();
-            debugConfig.setPrintThreadInfo(true);
-            debugConfig.setPrintTimeStamp(true);
-            debugConfig.setPrintTrackInfo(true);
-            debugConfig.setTrackFilter("io.github.heartinfei.superlog");
+            Configuration debugConfig = new Configuration()
+                    .setPrintThreadInfo(true)
+                    .setPrintTimeStamp(true)
+                    .setPrintTrackInfo(true)
+                    .setTrackFilter("io.github.heartinfei.superlog");
             S.init(debugConfig).addPlans(new DebugPlan());
         } else {
-            Configuration releaseConfig = new Configuration();
-            releaseConfig.setPrintThreadInfo(true);
-            releaseConfig.setPrintTimeStamp(true);
-            releaseConfig.setPrintTrackInfo(true);
-            releaseConfig.setTrackFilter("io.github.heartinfei.superlog");
+            Configuration releaseConfig = new Configuration()
+                    .setPrintThreadInfo(true)
+                    .setPrintTimeStamp(true)
+                    .setPrintTrackInfo(true)
+                    .setTrackFilter("io.github.heartinfei.superlog");
             S.init(releaseConfig).addPlans(new ReleasePlan());
         }
     }
