@@ -2,8 +2,8 @@ package io.github.heartinfei.slogger
 
 import android.util.Log
 import io.github.heartinfei.slogger.plan.BasePlan
-import java.lang.RuntimeException
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Log helper.
@@ -15,9 +15,9 @@ class S private constructor() {
     }
 
     companion object : LogPrinter {
-        private var CONFIG: Configuration? = null
+        override val plans: ArrayList<BasePlan> = ArrayList()
 
-        private val plans = ArrayList<BasePlan>()
+        private var CONFIG: Configuration? = null
 
         /** Force read from main memory.*/
         @Volatile
@@ -33,43 +33,70 @@ class S private constructor() {
         }
 
         @JvmStatic
-        fun withTrackFilter(filter: String): Configuration {
+        fun withTag(tag: String): LogPrinterProxy {
             if (CONFIG == null) {
                 throw RuntimeException("Init config is null call S.init(...) first.")
             }
-            return Configuration(CONFIG!!).setTrackFilter(filter)
+            val config = Configuration(CONFIG!!).apply {
+                this.tag = tag
+            }
+            return LogPrinterProxy(config, this)
         }
 
         @JvmStatic
-        fun withTag(tag: String): Configuration {
+        fun withTrackFilter(filter: String): LogPrinterProxy {
             if (CONFIG == null) {
                 throw RuntimeException("Init config is null call S.init(...) first.")
             }
-            return Configuration(CONFIG!!).setTag(tag)
+            val config = Configuration(CONFIG!!).apply {
+                this.trackFilter = filter
+            }
+            return LogPrinterProxy(config, this)
         }
 
         @JvmStatic
-        fun withTrackDeep(level: Int): Configuration {
+        fun withTrackDeep(level: Int): LogPrinterProxy {
             if (CONFIG == null) {
                 throw RuntimeException("Init config is null call S.init(...) first.")
             }
-            return Configuration(CONFIG!!).setPrintTrackInfo(true).setTrackDeep(level)
+            val config = Configuration(CONFIG!!).apply {
+                this.trackDeep = level
+            }
+            return LogPrinterProxy(config, this)
         }
 
         @JvmStatic
-        fun withTrackInfo(stat: Boolean): Configuration {
+        fun withTrackInfo(stat: Boolean): LogPrinterProxy {
             if (CONFIG == null) {
                 throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
             }
-            return Configuration(CONFIG!!).setPrintTrackInfo(stat)
+
+            val config = Configuration(CONFIG!!).apply {
+                this.printTrackInfo = stat
+            }
+            return LogPrinterProxy(config, this)
         }
 
         @JvmStatic
-        fun withThreadInfo(print: Boolean): Configuration {
+        fun withThreadInfo(print: Boolean): LogPrinterProxy {
             if (CONFIG == null) {
                 throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
             }
-            return Configuration(CONFIG!!).setPrintThreadInfo(print)
+            val config = Configuration(CONFIG!!).apply {
+                this.printThreadInfo = print
+            }
+            return LogPrinterProxy(config, this)
+        }
+
+        @JvmStatic
+        fun withTimeStamp(value: Boolean): LogPrinterProxy {
+            if (CONFIG == null) {
+                throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
+            }
+            val config = Configuration(CONFIG!!).apply {
+                this.printTimeStamp = value
+            }
+            return LogPrinterProxy(config, this)
         }
 
         @JvmStatic
@@ -114,10 +141,6 @@ class S private constructor() {
 
         override fun json(message: String?) {
             throw RuntimeException("Do not implement yet.")
-        }
-
-        internal fun invokePlans(config: Configuration, priority: Int, message: String?, vararg args: Any?) {
-            planArray.forEach { it.assembleAndEchoLog(config, priority, message, *args) }
         }
     }
 }

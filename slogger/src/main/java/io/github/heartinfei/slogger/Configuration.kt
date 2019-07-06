@@ -1,77 +1,95 @@
 package io.github.heartinfei.slogger
 
-import android.util.Log
-
 /**
  * [trackFilter] Used to filter stack
  * [tag]    Log withTag
  * [trackDeep] The stack deep to print.
- * [isPrintStackInfo] true print stack info.
- * [isPrintThreadInfo] true print thread info
- * [isPrintTimeStamp] true print timestamp.
+ * [printTrackInfo] true print stack info.
+ * [printThreadInfo] true print thread info
+ * [printTimeStamp] true print timestamp.
  * @author Rango on 2019-05-29 249346528@qq.com
  */
 class Configuration(
-        internal var trackFilter: String? = null,
-        internal var tag: String? = "",
-        internal var trackDeep: Int = 1,
-        internal var isPrintStackInfo: Boolean = true,
-        internal var isPrintThreadInfo: Boolean = true,
-        internal var isPrintTimeStamp: Boolean = false
-) : LogPrinter {
+        var trackFilter: String? = null,
+        var tag: String? = "",
+        var trackDeep: Int = 1,
+        var printTrackInfo: Boolean = true,
+        var printThreadInfo: Boolean = true,
+        var printTimeStamp: Boolean = false) {
 
     constructor(c: Configuration) : this(
             trackFilter = c.trackFilter,
             tag = c.tag,
             trackDeep = c.trackDeep,
-            isPrintStackInfo = c.isPrintStackInfo,
-            isPrintThreadInfo = c.isPrintThreadInfo,
-            isPrintTimeStamp = c.isPrintTimeStamp
+            printTrackInfo = c.printTrackInfo,
+            printThreadInfo = c.printThreadInfo,
+            printTimeStamp = c.printTimeStamp
     )
 
-    fun setPrintTimeStamp(print: Boolean): Configuration {
-        isPrintTimeStamp = print
+    fun printThreadInfo(arg: Boolean): Configuration {
+        this.printThreadInfo = arg
         return this
     }
 
-    fun setTrackFilter(trackFilter: String?): Configuration {
-        this.trackFilter = trackFilter
+    fun printTimeStamp(arg: Boolean): Configuration {
+        this.printTimeStamp = arg
         return this
     }
 
-    fun setTag(tag: String): Configuration {
-        this.tag = tag
+    fun printTrackInfo(arg: Boolean): Configuration {
+        this.printTrackInfo = arg
         return this
     }
 
-    fun setPrintTrackInfo(print: Boolean): Configuration {
-        this.isPrintStackInfo = print
+    fun trackFilter(arg: String): Configuration {
+        this.trackFilter = arg
         return this
     }
 
-    fun setTrackDeep(level: Int): Configuration {
-        this.trackDeep = level
+    fun trackDeep(deep: Int): Configuration {
+        this.trackDeep = deep
         return this
     }
 
-    fun setPrintThreadInfo(print: Boolean): Configuration {
-        this.isPrintThreadInfo = print
+    fun tag(arg: String): Configuration {
+        this.tag = arg
+        return this
+    }
+}
+
+/**
+ * 链式调用封装
+ */
+class LogPrinterProxy(private val config: Configuration,
+                      private val printer: LogPrinter) : LogPrinter by printer {
+
+    fun setPrintTimeStamp(print: Boolean): LogPrinterProxy {
+        config.printTimeStamp = print
         return this
     }
 
-    override fun i(message: String?, vararg args: Any?) {
-        S.invokePlans(this, Log.INFO, message, *args)
+    fun setTrackFilter(trackFilter: String?): LogPrinterProxy {
+        config.trackFilter = trackFilter
+        return this
     }
 
-    override fun d(message: String?, vararg args: Any?) {
-        S.invokePlans(this, Log.DEBUG, message, *args)
+    fun setTag(tag: String): LogPrinterProxy {
+        config.tag = tag
+        return this
     }
 
-    override fun e(message: String?, vararg args: Any?) {
-        S.invokePlans(this, Log.ERROR, message, *args)
+    fun setPrintTrackInfo(print: Boolean): LogPrinterProxy {
+        config.printTrackInfo = print
+        return this
     }
 
-    override fun json(message: String?) {
+    fun setTrackDeep(level: Int): LogPrinterProxy {
+        config.trackDeep = level
+        return this
+    }
 
+    fun setPrintThreadInfo(print: Boolean): LogPrinterProxy {
+        config.printThreadInfo = print
+        return this
     }
 }

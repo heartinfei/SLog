@@ -4,6 +4,7 @@ import android.util.Log
 import io.github.heartinfei.slogger.Configuration
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.max
 import kotlin.reflect.KClass
 
 /**
@@ -61,31 +62,33 @@ abstract class BasePlan {
         }
     }
 
-    private fun getStackInfo(filter: String?, trackDeep: Int): List<StackTraceElement> =
-        Thread.currentThread().stackTrace
-            .filter { element ->
-                val name = element.className
-                val libFilter = name !in stackIgnoreFilter
-                val pFilter: Boolean = filter?.let { f ->
-                    name.contains(f)
-                } ?: libFilter
-                return@filter libFilter && pFilter
-            }
-            .toList()
-            .takeLast(Math.max(0, trackDeep))
-            .reversed()
+    private fun getStackInfo(filter: String?, trackDeep: Int): List<StackTraceElement> {
+        return Thread.currentThread().stackTrace
+                .filter { element ->
+                    val name = element.className
+                    val libFilter = name !in stackIgnoreFilter
+                    val pFilter: Boolean = filter?.let { f ->
+                        name.contains(f)
+                    } ?: libFilter
+                    return@filter libFilter && pFilter
+                }
+                .toList()
+                .takeLast(max(0, trackDeep))
+                .reversed()
+    }
+
 
     private fun assembleContentHeader(config: Configuration): String {
         var offset = ""
         var indicator = ""
         val header = StringBuilder()
-        if (config.isPrintThreadInfo) {
+        if (config.printThreadInfo) {
             header.append(getThreadInfo())
         }
-        if (config.isPrintTimeStamp) {
+        if (config.printTimeStamp) {
             header.append("#" + getTimeStr())
         }
-        val stackInfo = if (config.isPrintStackInfo) {
+        val stackInfo = if (config.printTrackInfo) {
             getStackInfo(config.trackFilter, config.trackDeep)
         } else null
 
