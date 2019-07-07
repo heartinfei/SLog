@@ -5,4 +5,7 @@
     <string name="print_normal">Print with custom tag</string>
     <string name="print_in_thread">Print in thread</string>
     <string name="print_with_temp_tag">Print with tag</string>
+    <string name="print_thread_info">Print thread info</string>
+    <string name="print_with_custom_tag">print with custom tag</string>
+    <string name="print_track_info">pirnt track info</string>
 </resources>

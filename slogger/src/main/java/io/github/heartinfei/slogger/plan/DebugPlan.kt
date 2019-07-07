@@ -1,10 +1,6 @@
 package io.github.heartinfei.slogger.plan
 
-import android.os.Build
 import android.util.Log
-import io.github.heartinfei.slogger.LogPrinterProxy
-import io.github.heartinfei.slogger.S
-import java.util.regex.Pattern
 
 /**
  * Echo log to console.
@@ -29,18 +25,7 @@ class DebugPlan : BasePlan() {
      * Note: This will not be called if a [manual mTag][.mTag] was specified.
      */
     private fun createStackElementTag(element: StackTraceElement): String? {
-        var tag = element.className.substringAfterLast('.')
-                .plus("(${element.methodName})")
-        val m = ANONYMOUS_CLASS.matcher(tag)
-        if (m.find()) {
-            tag = m.replaceAll("")
-        }
-        // Tag length limit was removed in API 24.
-        return if (tag.length <= MAX_TAG_LENGTH || Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            tag
-        } else {
-            tag.substring(0, MAX_TAG_LENGTH)
-        }
+        return "(${element.fileName}:${element.lineNumber})"
     }
 
     /**
@@ -78,12 +63,5 @@ class DebugPlan : BasePlan() {
             } while (i < newline)
             i++
         }
-    }
-
-    companion object {
-        private const val MAX_LOG_LENGTH = 4000
-        private const val MAX_TAG_LENGTH = 23
-        //Extract default log withTag when withTag is null.
-        private val ANONYMOUS_CLASS = Pattern.compile("(\\$\\d+)+$")
     }
 }

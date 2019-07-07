@@ -15,16 +15,16 @@ class S private constructor() {
     }
 
     companion object : LogPrinter {
-        override val plans: ArrayList<BasePlan> = ArrayList()
+        private val plans: ArrayList<BasePlan> = ArrayList()
 
-        private var CONFIG: Configuration? = null
+        private var CONFIG: SConfiguration? = null
 
         /** Force read from main memory.*/
         @Volatile
         internal var planArray = emptyArray<BasePlan>()
 
         @JvmStatic
-        fun init(c: Configuration): Companion {
+        fun init(c: SConfiguration): Companion {
             if (this.CONFIG != null) {
                 throw RuntimeException("S is already init.")
             }
@@ -68,7 +68,7 @@ class S private constructor() {
         @JvmStatic
         fun withTrackInfo(stat: Boolean): LogPrinterProxy {
             if (CONFIG == null) {
-                throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
+                throw RuntimeException("Default 'SConfiguration' is null,please call S.init() first.")
             }
 
             val config = CONFIG!!.clone().apply {
@@ -80,7 +80,7 @@ class S private constructor() {
         @JvmStatic
         fun withThreadInfo(print: Boolean): LogPrinterProxy {
             if (CONFIG == null) {
-                throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
+                throw RuntimeException("Default 'SConfiguration' is null,please call S.init() first.")
             }
             val config = CONFIG!!.clone().apply {
                 this.printThreadInfo = print
@@ -89,20 +89,9 @@ class S private constructor() {
         }
 
         @JvmStatic
-        fun withTimeStamp(value: Boolean): LogPrinterProxy {
-            if (CONFIG == null) {
-                throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
-            }
-            val config = CONFIG!!.clone().apply {
-                this.printTimeStamp = value
-            }
-            return LogPrinterProxy(config, this)
-        }
-
-        @JvmStatic
         fun addPlans(vararg plans: BasePlan) {
             if (CONFIG == null) {
-                throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
+                throw RuntimeException("Default 'SConfiguration' is null,please call S.init() first.")
             }
             synchronized(this.plans) {
                 Collections.addAll(this.plans, *plans)
@@ -126,20 +115,73 @@ class S private constructor() {
         }
 
         @JvmStatic
-        override fun i(message: String?, vararg args: Any?) {
-            planArray.forEach { it.assembleAndEchoLog(CONFIG, Log.INFO, message, *args) }
+        override fun i(message: Any?) {
+            i(message, null)
+        }
+
+
+        internal fun i(message: Any?, c: SConfiguration?) {
+            message.let {
+                return@let if (it !is String) {
+                    it.toString()
+                } else
+                    it
+            }.apply {
+                if (c == null) {
+                    planArray.forEach { it.assembleAndEchoLog(CONFIG, Log.INFO, this) }
+                } else {
+                    planArray.forEach { it.assembleAndEchoLog(c, Log.INFO, this) }
+                }
+            }
         }
 
         @JvmStatic
-        override fun d(message: String?, vararg args: Any?) {
-            planArray.forEach { it.assembleAndEchoLog(CONFIG, Log.DEBUG, message, *args) }
+        override fun d(message: Any?) {
+            d(message, null)
         }
 
-        override fun e(message: String?, vararg args: Any?) {
-            planArray.forEach { it.assembleAndEchoLog(CONFIG, Log.ERROR, message, *args) }
+
+        internal fun d(message: Any?, c: SConfiguration?) {
+            message.let {
+                return@let if (it !is String) {
+                    it.toString()
+                } else
+                    it
+            }.apply {
+                if (c == null) {
+                    planArray.forEach { it.assembleAndEchoLog(CONFIG, Log.DEBUG, this) }
+                } else {
+                    planArray.forEach { it.assembleAndEchoLog(c, Log.DEBUG, this) }
+                }
+            }
         }
 
+        @JvmStatic
+        override fun e(message: Any?) {
+            e(message, null)
+        }
+
+        internal fun e(message: Any?, c: SConfiguration?) {
+            message.let {
+                return@let if (it !is String) {
+                    it.toString()
+                } else
+                    it
+            }.apply {
+                if (c == null) {
+                    planArray.forEach { it.assembleAndEchoLog(CONFIG, Log.ERROR, this) }
+                } else {
+                    planArray.forEach { it.assembleAndEchoLog(c, Log.ERROR, this) }
+                }
+            }
+        }
+
+        @JvmStatic
         override fun json(message: String?) {
+            json(message, null)
+        }
+
+        internal fun json(message: String?, config: SConfiguration?) {
             throw RuntimeException("Do not implement yet.")
         }
     }

@@ -16,11 +16,27 @@
         android:text="@string/print" />
 
     <Button
-        android:id="@+id/btn_test"
+        android:id="@+id/btnThreadInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="onClick"
         android:layout_margin="16dp"
-        android:text="@string/custom" />
+        android:text="@string/print_thread_info" />
+
+    <Button
+        android:id="@+id/btnCustomTag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:layout_margin="16dp"
+        android:text="@string/print_with_custom_tag" />
+
+    <Button
+        android:id="@+id/btnStackInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:layout_margin="16dp"
+        android:text="@string/print_track_info" />
 
 </LinearLayout>
