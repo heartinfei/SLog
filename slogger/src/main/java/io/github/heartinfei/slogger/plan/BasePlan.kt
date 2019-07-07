@@ -1,19 +1,19 @@
 package io.github.heartinfei.slogger.plan
 
+import android.os.Build
 import android.util.Log
-import io.github.heartinfei.slogger.Configuration
+import io.github.heartinfei.slogger.SConfiguration
 import io.github.heartinfei.slogger.LogPrinterProxy
 import io.github.heartinfei.slogger.S
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Pattern
 import kotlin.math.max
-import kotlin.reflect.KClass
 
 /**
  * @author Rango on 2019-05-29 249346528@qq.com
  */
 abstract class BasePlan {
-    private val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
     protected open val stackIgnoreFilter = mutableListOf<String>(
             S::class.java.name,
             S.Companion::class.java.name,
@@ -53,12 +53,20 @@ abstract class BasePlan {
      */
     protected abstract fun echoLog(priority: Int, tag: String?, message: String)
 
-    internal fun assembleAndEchoLog(config: Configuration?, priority: Int, message: String?, vararg args: Any?) {
-        val tag = if (config?.tag?.isNotEmpty() == true) {
+    internal fun assembleAndEchoLog(config: SConfiguration?, priority: Int, message: String?, vararg args: Any?) {
+        var tag = if (config?.tag?.isNotEmpty() == true) {
             config.tag
         } else {
             mTag
         }
+        if (config?.printThreadInfo == true) {
+            tag = tag.plus("Thread#${Thread.currentThread().name}")
+        }
+        // Tag length limit was removed in API 24.
+        if (tag!!.length > MAX_TAG_LENGTH && Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            tag = tag.substring(0, MAX_TAG_LENGTH)
+        }
+
         if (!isLoggable(tag, priority)) {
             return
         }
@@ -69,63 +77,46 @@ abstract class BasePlan {
         }
     }
 
-    private fun getStackInfo(filter: String?, trackDeep: Int): List<StackTraceElement> {
-        return Thread.currentThread().stackTrace
-                .filter { element ->
-                    val name = element.className
-                    val libFilter = name !in stackIgnoreFilter
-                    val pFilter: Boolean = filter?.let { f ->
-                        name.contains(f)
-                    } ?: libFilter
-                    return@filter libFilter && pFilter
-                }
-                .toList()
-                .takeLast(max(0, trackDeep))
-                .reversed()
+    private fun getStackInfo(config: SConfiguration): List<StackTraceElement>? {
+        return if (config.printTrackInfo) {
+            Thread.currentThread().stackTrace
+                    .filter { element ->
+                        return@filter element.className !in stackIgnoreFilter
+                                && element.className.contains(config.trackFilter.orEmpty())
+                    }
+                    .toList()
+                    .takeLast(max(0, config.trackDeep))
+                    .reversed()
+        } else null
     }
 
-
-    private fun assembleContentHeader(config: Configuration): String {
-        var offset = ""
-        var indicator = ""
-        val header = StringBuilder()
-        if (config.printThreadInfo) {
-            header.append(getThreadInfo())
-        }
-        if (config.printTimeStamp) {
-            header.append("#" + getTimeStr())
-        }
-        val stackInfo = if (config.printTrackInfo) {
-            getStackInfo(config.trackFilter, config.trackDeep)
-        } else null
-
-        stackInfo?.takeIf {
-            it.isNotEmpty()
-        }?.apply {
-            header.append("#->\n")
-            for (element in this) {
-                header.append("$offset$indicator$element\n")
+    private fun assembleContentHeader(config: SConfiguration): String {
+        val headerBuilder = StringBuffer()
+        getStackInfo(config)?.let {
+            headerBuilder.append(" \n")
+            var offset = ""
+            var indicator = ""
+            for (element in it) {
+                headerBuilder.append("$offset$indicator$element\n")
                 indicator = "↳"
                 offset += " "
             }
-            val len = header.length
-            if (len > 1 && '\n' == (header[len - 1])) {
-                header.deleteCharAt(header.length - 1).append("\n")
+            val len = headerBuilder.length
+            if (len > 1 && '\n' == (headerBuilder[len - 1])) {
+                headerBuilder.deleteCharAt(headerBuilder.length - 1).append("\n")
             } else {
-                header.append("\n")
+                headerBuilder.append("\n")
             }
         }
-        return header.toString()
-    }
-
-    private fun getTimeStr(): String {
-        return dateFormatter.format(Date())
+        return headerBuilder.toString()
     }
 
     /**
      * Get current thread name.
      */
-    private fun getThreadInfo(): String = "Thread#${Thread.currentThread().name}"
+    private fun getThreadInfo(config: SConfiguration): String {
+        return if (config.printThreadInfo) Thread.currentThread().name else ""
+    }
 
 
     private fun assembleLogBody(header: String, msg: String?, vararg args: Any?): String {
@@ -134,6 +125,13 @@ abstract class BasePlan {
             content += arg
         }
         return content
+    }
+
+    companion object {
+        const val MAX_LOG_LENGTH = 4000
+        const val MAX_TAG_LENGTH = 23
+        //Extract default log withTag when withTag is null.
+        val ANONYMOUS_CLASS = Pattern.compile("(\\$\\d+)+$")
     }
 
 }

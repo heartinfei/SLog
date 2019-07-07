@@ -9,56 +9,45 @@ package io.github.heartinfei.slogger
  * [printTimeStamp] true print timestamp.
  * @author Rango on 2019-05-29 249346528@qq.com
  */
-class Configuration : Cloneable {
+class SConfiguration : Cloneable {
     internal var trackFilter: String? = null
     internal var tag: String? = ""
     internal var trackDeep: Int = 1
     internal var printTrackInfo: Boolean = true
     internal var printThreadInfo: Boolean = true
-    internal var printTimeStamp: Boolean = false
 
-    public override fun clone(): Configuration {
-        return super.clone() as Configuration
+    public override fun clone(): SConfiguration {
+        return super.clone() as SConfiguration
     }
 
-    fun setPrintThreadInfo(arg: Boolean): Configuration {
+    fun setPrintThreadInfo(arg: Boolean): SConfiguration {
         this.printThreadInfo = arg
         return this
     }
 
-    fun setPrintTimeStamp(arg: Boolean): Configuration {
-        this.printTimeStamp = arg
-        return this
-    }
-
-    fun setPrintTrackInfo(arg: Boolean): Configuration {
+    fun setPrintTrackInfo(arg: Boolean): SConfiguration {
         this.printTrackInfo = arg
         return this
     }
 
-    fun setTrackFilter(arg: String): Configuration {
+    fun setTrackFilter(arg: String): SConfiguration {
         this.trackFilter = arg
         return this
     }
 
-    fun setTrackDeep(deep: Int): Configuration {
+    fun setTrackDeep(deep: Int): SConfiguration {
         this.trackDeep = deep
         return this
     }
 
-    fun setTag(arg: String): Configuration {
+    fun setTag(arg: String): SConfiguration {
         this.tag = arg
         return this
     }
 }
 
-class LogPrinterProxy(private val config: Configuration,
+class LogPrinterProxy(private val config: SConfiguration,
                       private val printer: LogPrinter) : LogPrinter by printer {
-
-    fun setPrintTimeStamp(print: Boolean): LogPrinterProxy {
-        config.printTimeStamp = print
-        return this
-    }
 
     fun setTrackFilter(trackFilter: String?): LogPrinterProxy {
         config.trackFilter = trackFilter

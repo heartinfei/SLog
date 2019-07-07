@@ -17,14 +17,14 @@ class S private constructor() {
     companion object : LogPrinter {
         override val plans: ArrayList<BasePlan> = ArrayList()
 
-        private var CONFIG: Configuration? = null
+        private var CONFIG: SConfiguration? = null
 
         /** Force read from main memory.*/
         @Volatile
         internal var planArray = emptyArray<BasePlan>()
 
         @JvmStatic
-        fun init(c: Configuration): Companion {
+        fun init(c: SConfiguration): Companion {
             if (this.CONFIG != null) {
                 throw RuntimeException("S is already init.")
             }
@@ -68,7 +68,7 @@ class S private constructor() {
         @JvmStatic
         fun withTrackInfo(stat: Boolean): LogPrinterProxy {
             if (CONFIG == null) {
-                throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
+                throw RuntimeException("Default 'SConfiguration' is null,please call S.init() first.")
             }
 
             val config = CONFIG!!.clone().apply {
@@ -80,7 +80,7 @@ class S private constructor() {
         @JvmStatic
         fun withThreadInfo(print: Boolean): LogPrinterProxy {
             if (CONFIG == null) {
-                throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
+                throw RuntimeException("Default 'SConfiguration' is null,please call S.init() first.")
             }
             val config = CONFIG!!.clone().apply {
                 this.printThreadInfo = print
@@ -89,20 +89,9 @@ class S private constructor() {
         }
 
         @JvmStatic
-        fun withTimeStamp(value: Boolean): LogPrinterProxy {
-            if (CONFIG == null) {
-                throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
-            }
-            val config = CONFIG!!.clone().apply {
-                this.printTimeStamp = value
-            }
-            return LogPrinterProxy(config, this)
-        }
-
-        @JvmStatic
         fun addPlans(vararg plans: BasePlan) {
             if (CONFIG == null) {
-                throw RuntimeException("Default 'Configuration' is null,please call S.init() first.")
+                throw RuntimeException("Default 'SConfiguration' is null,please call S.init() first.")
             }
             synchronized(this.plans) {
                 Collections.addAll(this.plans, *plans)
