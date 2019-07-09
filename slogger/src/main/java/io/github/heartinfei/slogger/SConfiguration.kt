@@ -48,27 +48,27 @@ class SConfiguration : Cloneable {
 
 class LogPrinterProxy(private val config: SConfiguration,
                       private val printer: S.Companion) : LogPrinter {
-    fun setTrackFilter(trackFilter: String?): LogPrinterProxy {
+    fun withTrackFilter(trackFilter: String?): LogPrinterProxy {
         config.trackFilter = trackFilter
         return this
     }
 
-    fun setTag(tag: String): LogPrinterProxy {
+    fun withTag(tag: String): LogPrinterProxy {
         config.tag = tag
         return this
     }
 
-    fun setPrintTrackInfo(print: Boolean): LogPrinterProxy {
+    fun withPrintTrackInfo(print: Boolean): LogPrinterProxy {
         config.printTrackInfo = print
         return this
     }
 
-    fun setTrackDeep(level: Int): LogPrinterProxy {
+    fun withTrackDeep(level: Int): LogPrinterProxy {
         config.trackDeep = level
         return this
     }
 
-    fun setPrintThreadInfo(print: Boolean): LogPrinterProxy {
+    fun withPrintThreadInfo(print: Boolean): LogPrinterProxy {
         config.printThreadInfo = print
         return this
     }

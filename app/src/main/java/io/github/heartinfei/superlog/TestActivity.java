@@ -31,7 +31,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_tag:
                 //使用自定义Tag
-                S.withTag("My_Tag").i("Customer test");
+                S.withTag("My_Tag").withPrintThreadInfo(true).i("Customer test");
                 break;
         }
     }
