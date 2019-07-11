@@ -20,7 +20,12 @@ class MainActivity : AppCompatActivity() {
             S.i("I'm a log.")
         }
         btnCustomTag.setOnClickListener {
-            S.withTag("MyTag").i("I'm a log.")
+            S.withTag("MyTag")
+                    .withPrintThreadInfo(true)
+                    .withPrintTrackInfo(true)
+                    .withTrackDeep(1)
+                    .withTrackFilter(BuildConfig.APPLICATION_ID)
+                    .i("I'm a log.")
         }
 
         btnStackInfo.setOnClickListener {

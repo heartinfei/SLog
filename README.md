@@ -10,12 +10,12 @@
 
 ### 功能说明
 1. 支持Log一键定位到源码
-3. 可扩展输出Log到其他介质(文件,网络,数据库等)
-4. 默认使用当前类名作为Tag同时支持自定义Tag
-5. 支持输出线程信息
-6. 支持输出调用堆栈信息
-8. 支持输出格式自定义
-9. 支持多线程环境
+2. 可扩展输出Log到其他介质(文件,网络,数据库等)
+3. 默认使用当前类名作为Tag同时支持自定义Tag
+4. 支持输出线程信息
+5. 支持输出调用堆栈信息
+6. 支持输出格式自定义
+7. 支持多线程环境
 
 ### 使用说明
 
@@ -29,7 +29,7 @@
 
 * 通过jar集成
 
-  下载[jar-2004.jar](.//)
+  下载[jar-2004.jar](./img/superlog-2004.jar)
 
   
 
@@ -82,7 +82,7 @@ thread(start = true, name = "MyThread") {
 
 ![image-20190711140357723](./img/image-20190711140357723.png)
 
-5. 输出堆栈信息
+6. 输出堆栈信息
 
 ```kotlin
 private fun testTrack1() {
@@ -99,6 +99,17 @@ private fun testTrack3() {
 ```
 
 ![image-20190711140655061](./img/image-20190711140655061.png)
+
+7. 其他
+
+```kotlin
+S.withTag("MyTag")
+ .withPrintThreadInfo(true)
+ .withPrintTrackInfo(true)
+ .withTrackDeep(1)
+ .withTrackFilter(BuildConfig.APPLICATION_ID)
+ .i("I'm a log.")
+```
 
 
 
