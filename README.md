@@ -1,77 +1,107 @@
 # SuperLog
 
 
-![输出到控制台](./img/1513934900618.jpg)
-![输出到文件](./img/1514028944351.jpg)
+![输出到控制台](./img/log.gif)
 
-轻量级Log日志框架，支持输出到控制台和文件等支持自定义扩展。
-输出到文件的Log以自定义 *Tag* 作为文件名，单个日志文件限制大小为4M。
+
+### 简介
+
+轻量级Android Log日志框架并提供强大的扩展能力，使用Kotlin实现，整体只有几K大小，你可以将它集成到你工程中，几乎不会带来任何负面影响。支持自定义输出策略，目前框架只实现了`DebugPlan`(输出到控制台)通过继承`BasePlan`可以打造满足你当前业务需要的输出策略，例如输出到文件、网络、数据库等。
+
 ### 功能说明
-1. 输出Log到控制台
-2. 输出Log到文件
-3. 可扩展输出Log到其他介质
-4. 支持自定义Tag
+1. 支持Log一键定位到源码
+3. 可扩展输出Log到其他介质(文件,网络,数据库等)
+4. 默认使用当前类名作为Tag同时支持自定义Tag
 5. 支持输出线程信息
 6. 支持输出调用堆栈信息
-7. 支持Log定位
 8. 支持输出格式自定义
 9. 支持多线程环境
 
 ### 使用说明
 
-1. 添加依赖
+1. 集成方式
 
-```java
-implementation 'io.github.heartinfei:slogger:1.0.4'
-```
+* 通过gradle集成
+
+   ```java
+  implementation 'io.github.heartinfei:slogger:2.0.4'
+  ```
+
+* 通过jar集成
+
+  下载[jar-2004.jar](.//)
+
+  
 
 2. 初始化
+
+在使用之前需要先调用`S.init()`方法进行初始化，同时在这里可以配置全局默认输出策略。
+
 ```java
 public class SApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        S.init(this);
         if (BuildConfig.DEBUG) {
-            S.addPlant(new DebugPlan());    //输出到控制台
+            SConfiguration debugConfig = new SConfiguration()
+                    .setPrintThreadInfo(false)
+                    .setPrintTrackInfo(false)
+                    .setTrackFilter(BuildConfig.APPLICATION_ID);
+            S.init(debugConfig).addPlans(new DebugPlan());
         } else {
-            S.addPlant(new ReleasePlan(path)); //输出到文件
+            //release 策略
         }
     }
 }
 
 ```
-3. 使用 
-```
+> 注意: `S.init()`方法只能调用一次
+
+3. 普通输出 
+```java
 //普通输出
-S.i("Test");
-
-//Error输出
-S.e(...);
-
-//自定义Tag
-S.log("MyTag","Message .....");
-
+S.i("I'm a log.");
 ```
+![image-20190711135531814](./img/image-20190711135531814.png)
+其中`MainActiivity`为Log输出所在类文件名作为默认Tag名称。
 
-4. 自定义`Configuration`
+4. 使用自定义Tag
 
 ```java
-Configuration config = new Configuration.Builder(this)
-               .trackInfoDeep(Integer.MAX_VALUE) //打印堆栈深度
-               //确保你的包名和源码包一致,如果你的程序存在多个构建这里需要注意否则堆栈信息可能不正确
-               .pkgName(BuildConfig.APPLICATION_ID)
-               .tag("S_LOG")           //default is Application name
-               .isPrintLineNo(true)    //打印行号 defaut true
-               .isPrintTag(true)       //打印Tag defaut true
-               .isPrintTrackInfo(true) //打印堆栈 defaut true
-               .isPrintThreadInfo(true)//打印线程信息 defaut true
-               .build();
-S.addConfig(c);
+S.withTag("MyTag").i("I'm a log")
+```
+![image-20190711140055227](./img/image-20190711140055227.png) 
 
+5. 输出线程信息
+
+```kotlin
+thread(start = true, name = "MyThread") {
+		S.withThreadInfo(true).i("I'm a log.")
+}
 ```
 
-5. 扩展Log输出方式
-通过继承`BasePlan`可创建自定义`Plan`，可参考`ReleasePlan`的实现
+![image-20190711140357723](./img/image-20190711140357723.png)
 
-6. 其他请参考[Demo](https://github.com/heartinfei/SLog)
+5. 输出堆栈信息
+
+```kotlin
+private fun testTrack1() {
+    testTrack2()
+}
+
+private fun testTrack2() {
+    testTrack3()
+}
+
+private fun testTrack3() {
+    S.withTrackInfo(true).i("I'm a log.")
+}
+```
+
+![image-20190711140655061](./img/image-20190711140655061.png)
+
+
+
+### 扩展
+
+通过继承`BasePlan`可创建自定义`Plan`，可参考`ReleasePlan`的实现，其他请参考[Demo](https://github.com/heartinfei/SLog)

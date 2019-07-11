@@ -2,8 +2,8 @@ package io.github.heartinfei.superlog;
 
 import android.app.Application;
 
-import io.github.heartinfei.slogger.SConfiguration;
 import io.github.heartinfei.slogger.S;
+import io.github.heartinfei.slogger.SConfiguration;
 import io.github.heartinfei.slogger.plan.BasePlan;
 import io.github.heartinfei.slogger.plan.DebugPlan;
 
@@ -18,7 +18,7 @@ public class SApplication extends Application {
             SConfiguration debugConfig = new SConfiguration()
                     .setPrintThreadInfo(false)
                     .setPrintTrackInfo(false)
-                    .setTrackFilter("io.github.heartinfei.superlog");
+                    .setTrackFilter(BuildConfig.APPLICATION_ID);
             S.init(debugConfig).addPlans(new DebugPlan());
         } else {
             SConfiguration releaseConfig = new SConfiguration()
