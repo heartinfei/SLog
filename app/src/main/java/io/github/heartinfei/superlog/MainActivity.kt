@@ -48,7 +48,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun testTrack3() {
-        S.withTrackInfo(true).i("Hello Track")
+        S.withTrackInfo(true)
+                .withPrintThreadInfo(true)
+                .i("I'm a log.")
     }
 
     private fun threadFun() {
@@ -60,6 +62,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 class People {
     fun say() {
-        S.withThreadInfo(true).i("Hello thread.")
+        S.withThreadInfo(true).i("I'm a log.")
     }
 }
