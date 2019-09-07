@@ -100,7 +100,18 @@ private fun testTrack3() {
 
 ![image-20190711140655061](./img/image-20190711140655061.png)
 
-7. 其他
+7. JSON格式输出
+
+
+```kotlin
+var json = """[{"name":"rango","age":1,"child":{"name":"yangyang","age":1},"sex":"男"},{"name":"rango","age":1,"child":{"name":"yangyang","age":1}}]"""
+S.json(json)
+```
+
+![image-20190907165017775](./img/image-20190907165017775.png)
+
+
+8. 其他
 
 ```kotlin
 S.withTag("MyTag")
