@@ -18,6 +18,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         btn_print.setOnClickListener {
             S.json(jsonString())
+            S.i(mapString())
+            S.i(mapString().toString())
         }
         btnCustomTag.setOnClickListener {
             S.withTag("MyTag")
@@ -37,6 +39,13 @@ class MainActivity : AppCompatActivity() {
                 S.withThreadInfo(true).i("I'm a log.")
             }
         }
+    }
+
+    private fun mapString(): Map<String, Any> {
+        return mapOf<String, Any>(
+                Pair("name", "Rango"),
+                Pair("date", "2018-1-1"),
+                Pair("note", "Hello"))
     }
 
     private fun jsonString(): String {

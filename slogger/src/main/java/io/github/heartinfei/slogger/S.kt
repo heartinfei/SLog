@@ -2,7 +2,7 @@ package io.github.heartinfei.slogger
 
 import android.util.Log
 import io.github.heartinfei.slogger.formter.ContentFormat
-import io.github.heartinfei.slogger.formter.JSONFormater
+import io.github.heartinfei.slogger.formter.JSONFormat
 import io.github.heartinfei.slogger.plan.BasePlan
 import java.util.*
 import kotlin.collections.ArrayList
@@ -18,7 +18,7 @@ class S private constructor() {
 
     companion object : LogPrinter {
         private val PLANS: ArrayList<BasePlan> = ArrayList()
-        private val CONTENT_FORMAT: ContentFormat = JSONFormater()
+        private val CONTENT_FORMAT: ContentFormat = JSONFormat()
         private var CONFIG: SConfiguration? = null
 
         /** Force read from main memory.*/
@@ -124,10 +124,10 @@ class S private constructor() {
 
         internal fun i(message: Any?, c: SConfiguration?) {
             message.let {
-                return@let if (it !is String) {
-                    it.toString()
-                } else
-                    it
+                return@let when (it) {
+                    is String -> it
+                    else -> it.toString()
+                }
             }.apply {
                 if (c == null) {
                     planArray.forEach { it.assembleAndEchoLog(CONFIG, Log.INFO, this) }
@@ -147,7 +147,6 @@ class S private constructor() {
             message.let {
                 return@let when (it) {
                     is String -> it
-                    is Map<*, *> -> it.toString()
                     else -> it.toString()
                 }
 
@@ -167,10 +166,10 @@ class S private constructor() {
 
         internal fun e(message: Any?, c: SConfiguration?) {
             message.let {
-                return@let if (it !is String) {
-                    it.toString()
-                } else
-                    it
+                return@let when (it) {
+                    is String -> it
+                    else -> it.toString()
+                }
             }.apply {
                 if (c == null) {
                     planArray.forEach { it.assembleAndEchoLog(CONFIG, Log.ERROR, this) }
@@ -181,12 +180,12 @@ class S private constructor() {
         }
 
         @JvmStatic
-        override fun json(json: String?) {
-            json(json, null)
+        override fun json(message: String?) {
+            json(message, null)
         }
 
-        internal fun json(json: String?, config: SConfiguration?) {
-            i(CONTENT_FORMAT.formatString(json), config)
+        internal fun json(message: String?, config: SConfiguration?) {
+            i(CONTENT_FORMAT.formatString(message), config)
         }
     }
 }
