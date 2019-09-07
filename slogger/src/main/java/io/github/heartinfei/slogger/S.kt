@@ -1,6 +1,8 @@
 package io.github.heartinfei.slogger
 
 import android.util.Log
+import io.github.heartinfei.slogger.formter.ContentFormat
+import io.github.heartinfei.slogger.formter.JSONFormater
 import io.github.heartinfei.slogger.plan.BasePlan
 import java.util.*
 import kotlin.collections.ArrayList
@@ -15,8 +17,8 @@ class S private constructor() {
     }
 
     companion object : LogPrinter {
-        private val plans: ArrayList<BasePlan> = ArrayList()
-
+        private val PLANS: ArrayList<BasePlan> = ArrayList()
+        private val CONTENT_FORMAT: ContentFormat = JSONFormater()
         private var CONFIG: SConfiguration? = null
 
         /** Force read from main memory.*/
@@ -35,7 +37,7 @@ class S private constructor() {
         @JvmStatic
         fun withTag(tag: String): LogPrinterProxy {
             if (CONFIG == null) {
-                throw RuntimeException("Init config is null call S.init(...) first.")
+                throw RuntimeException("Init config is null, Call S.init(...) first.")
             }
             val config = CONFIG!!.clone().apply {
                 this.tag = tag
@@ -46,7 +48,7 @@ class S private constructor() {
         @JvmStatic
         fun withTrackFilter(filter: String): LogPrinterProxy {
             if (CONFIG == null) {
-                throw RuntimeException("Init config is null call S.init(...) first.")
+                throw RuntimeException("Init config is null, Call S.init(...) first.")
             }
             val config = CONFIG!!.clone().apply {
                 this.trackFilter = filter
@@ -57,7 +59,7 @@ class S private constructor() {
         @JvmStatic
         fun withTrackDeep(level: Int): LogPrinterProxy {
             if (CONFIG == null) {
-                throw RuntimeException("Init config is null call S.init(...) first.")
+                throw RuntimeException("Init config is null, Call S.init(...) first.")
             }
             val config = CONFIG!!.clone().apply {
                 this.trackDeep = level
@@ -93,24 +95,24 @@ class S private constructor() {
             if (CONFIG == null) {
                 throw RuntimeException("Default 'SConfiguration' is null,please call S.init() first.")
             }
-            synchronized(this.plans) {
-                Collections.addAll(this.plans, *plans)
-                planArray = this.plans.toTypedArray()
+            synchronized(this.PLANS) {
+                Collections.addAll(this.PLANS, *plans)
+                planArray = this.PLANS.toTypedArray()
             }
         }
 
         @JvmStatic
         fun removePlan(plan: BasePlan) {
-            synchronized(plans) {
-                require(plans.remove(plan)) { "Cannot uproot tree which is not planted: $plan" }
-                planArray = plans.toTypedArray()
+            synchronized(PLANS) {
+                require(PLANS.remove(plan)) { "Cannot remove plan which is not added: $plan" }
+                planArray = PLANS.toTypedArray()
             }
         }
 
         @JvmStatic
         fun clearPlans(): Companion {
-            plans.clear()
-            planArray = plans.toTypedArray()
+            PLANS.clear()
+            planArray = PLANS.toTypedArray()
             return this
         }
 
@@ -143,10 +145,12 @@ class S private constructor() {
 
         internal fun d(message: Any?, c: SConfiguration?) {
             message.let {
-                return@let if (it !is String) {
-                    it.toString()
-                } else
-                    it
+                return@let when (it) {
+                    is String -> it
+                    is Map<*, *> -> it.toString()
+                    else -> it.toString()
+                }
+
             }.apply {
                 if (c == null) {
                     planArray.forEach { it.assembleAndEchoLog(CONFIG, Log.DEBUG, this) }
@@ -177,12 +181,12 @@ class S private constructor() {
         }
 
         @JvmStatic
-        override fun json(message: String?) {
-            json(message, null)
+        override fun json(json: String?) {
+            json(json, null)
         }
 
-        internal fun json(message: String?, config: SConfiguration?) {
-            throw RuntimeException("Do not implement yet.")
+        internal fun json(json: String?, config: SConfiguration?) {
+            i(CONTENT_FORMAT.formatString(json), config)
         }
     }
 }

@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         btn_print.setOnClickListener {
-            S.i("I'm a log.")
+            S.json(jsonString())
         }
         btnCustomTag.setOnClickListener {
             S.withTag("MyTag")
@@ -37,6 +37,10 @@ class MainActivity : AppCompatActivity() {
                 S.withThreadInfo(true).i("I'm a log.")
             }
         }
+    }
+
+    private fun jsonString(): String {
+        return """[{"name":"rango","age":1,"child":{"name":"yangyang","age":1},"sex":"男"},{"name":"rango","age":1,"child":{"name":"yangyang","age":1}}]"""
     }
 
 

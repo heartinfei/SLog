@@ -2,11 +2,9 @@ package io.github.heartinfei.slogger.plan
 
 import android.os.Build
 import android.util.Log
-import io.github.heartinfei.slogger.SConfiguration
 import io.github.heartinfei.slogger.LogPrinterProxy
 import io.github.heartinfei.slogger.S
-import java.text.SimpleDateFormat
-import java.util.*
+import io.github.heartinfei.slogger.SConfiguration
 import java.util.regex.Pattern
 import kotlin.math.max
 

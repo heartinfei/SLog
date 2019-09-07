@@ -13,6 +13,8 @@ import io.github.heartinfei.slogger.S;
  */
 public class TestActivity extends AppCompatActivity implements View.OnClickListener {
 
+    int j = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +45,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private void method() {
         test();
     }
-
-    int j = 0;
 
     private void test() {
         for (; j % 10 < 9; j++) {
