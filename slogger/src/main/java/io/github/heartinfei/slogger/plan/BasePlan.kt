@@ -112,14 +112,6 @@ abstract class BasePlan {
         return headerBuilder.toString()
     }
 
-    /**
-     * Get current thread name.
-     */
-    private fun getThreadInfo(config: SConfiguration): String {
-        return if (config.printThreadInfo) Thread.currentThread().name else ""
-    }
-
-
     private fun assembleLogBody(header: String, msg: String?, vararg args: Any?): String {
         var content = header + msg
         for (arg in args) {
@@ -131,8 +123,6 @@ abstract class BasePlan {
     companion object {
         const val MAX_LOG_LENGTH = 4000
         const val MAX_TAG_LENGTH = 23
-        //Extract default log withTag when withTag is null.
-        val ANONYMOUS_CLASS = Pattern.compile("(\\$\\d+)+$")
     }
 
 }

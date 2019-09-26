@@ -1,6 +1,7 @@
 package io.github.heartinfei.slogger.plan
 
 import android.util.Log
+import kotlin.math.min
 
 /**
  * Echo log to console.
@@ -49,19 +50,14 @@ class DebugPlan : BasePlan() {
         var i = 0
         val length = message.length
         while (i < length) {
-            var newline = message.indexOf('\n', i)
-            newline = if (newline != -1) newline else length
-            do {
-                val end = Math.min(newline, i + MAX_LOG_LENGTH)
-                val part = message.substring(i, end)
-                if (priority == Log.ASSERT) {
-                    Log.wtf(tag, part)
-                } else {
-                    Log.println(priority, tag, part)
-                }
-                i = end
-            } while (i < newline)
-            i++
+            val chunkEndIndex = min(length,i+ MAX_LOG_LENGTH)
+            val chunk = message.substring(i, chunkEndIndex)
+            if (priority == Log.ASSERT) {
+                Log.wtf(tag, chunk)
+            } else {
+                Log.println(priority, tag, chunk)
+            }
+            i = chunkEndIndex
         }
     }
 }
