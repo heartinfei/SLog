@@ -26,6 +26,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.btn_print:
                 //使用当前Activity默认Tag
+                S.withTag(null).i("hello");
                 nest();
                 break;
             case R.id.btn_thread:

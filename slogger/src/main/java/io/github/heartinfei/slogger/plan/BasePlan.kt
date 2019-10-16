@@ -5,7 +5,6 @@ import android.util.Log
 import io.github.heartinfei.slogger.LogPrinterProxy
 import io.github.heartinfei.slogger.S
 import io.github.heartinfei.slogger.SConfiguration
-import java.util.regex.Pattern
 import kotlin.math.max
 
 /**
@@ -19,18 +18,7 @@ abstract class BasePlan {
             LogPrinterProxy::class.java.name
     )
 
-    @get:JvmSynthetic
-    internal val explicitTag = ThreadLocal<String>()
-
-    internal open val mTag: String?
-        @JvmSynthetic
-        get() {
-            val tag = explicitTag.get()
-            if (tag != null) {
-                explicitTag.remove()
-            }
-            return tag
-        }
+    internal open val mTag: String = ""
 
     /**Add a stack filter.*/
     fun addStackIgnoreFilter(filter: String) {
@@ -52,16 +40,13 @@ abstract class BasePlan {
     protected abstract fun echoLog(priority: Int, tag: String?, message: String)
 
     internal fun assembleAndEchoLog(config: SConfiguration?, priority: Int, message: String?, vararg args: Any?) {
-        var tag = if (config?.tag?.isNotEmpty() == true) {
-            config.tag
-        } else {
-            mTag
-        }
+        var tag = config?.tag ?: mTag
+
         if (config?.printThreadInfo == true) {
             tag = tag.plus("Thread#${Thread.currentThread().name}")
         }
         // Tag length limit was removed in API 24.
-        if (tag!!.length > MAX_TAG_LENGTH && Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        if (tag.length > MAX_TAG_LENGTH && Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             tag = tag.substring(0, MAX_TAG_LENGTH)
         }
 

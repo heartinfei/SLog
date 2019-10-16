@@ -35,7 +35,7 @@ class S private constructor() {
         }
 
         @JvmStatic
-        fun withTag(tag: String): LogPrinterProxy {
+        fun withTag(tag: String?): LogPrinterProxy {
             if (CONFIG == null) {
                 throw RuntimeException("Init config is null, Call S.init(...) first.")
             }

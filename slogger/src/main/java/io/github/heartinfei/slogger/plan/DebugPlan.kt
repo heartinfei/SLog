@@ -13,10 +13,9 @@ class DebugPlan : BasePlan() {
         addStackIgnoreFilter(DebugPlan::class.java.name)
     }
 
-    override val mTag: String?
-        get() = super.mTag ?: Throwable().stackTrace
-                .first { it.className !in stackIgnoreFilter }
-                .let(::createStackElementTag)
+    override val mTag: String = Throwable().stackTrace
+            .first { it.className !in stackIgnoreFilter }
+            ?.let(::createStackElementTag) ?: super.mTag
 
     /**
      * Extract the mTag which should be used for the message from the `element`. By default
@@ -50,7 +49,7 @@ class DebugPlan : BasePlan() {
         var i = 0
         val length = message.length
         while (i < length) {
-            val chunkEndIndex = min(length,i+ MAX_LOG_LENGTH)
+            val chunkEndIndex = min(length, i + MAX_LOG_LENGTH)
             val chunk = message.substring(i, chunkEndIndex)
             if (priority == Log.ASSERT) {
                 Log.wtf(tag, chunk)
